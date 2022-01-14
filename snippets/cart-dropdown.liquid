@@ -1,0 +1,96 @@
+<div class="minicart-content cart-dropdown">
+  <div class="ajax-loader"></div>
+	<div class="header-cart-title">
+		<h3>{{ 'cart.general.title' | t }}</h3>
+	</div>
+	<div class="minicart-dropdown-wrapper">
+		{% if cart.item_count > 0 %}
+      <div class="minicart-items-wrapper">
+        <ol id="mini-cart" class="minicart-items">
+          {% for item in cart.items %}
+            <li class="product-item">
+              <div class="product">
+                <a href="{{ item.url | within: collections.all }}" class="product-item-photo">
+                  <img src="{{ item | img_url: '95x95', scale: 2 }}" alt="{{ item.title | escape }}">
+                </a>
+                <div class="product-item-details">
+                  <div class="product-item-name">
+                    <a href="{{ item.url }}">
+                      {{ item.product.title }}
+                    </a>
+                  </div>
+
+                  {% unless item.variant.title contains 'Default' %}
+                    {% if item.product.options.size > 0 %}
+                      <dl class="product-item-options options">
+                        {% for option in item.product.options %}
+                        <dt class="label">{{ option }}</dt>
+                        <dd class="values">{{ item.variant.options[forloop.index0] }}</dd>
+                        {% endfor %}
+                      </dl>
+                    {% endif %}
+                  {% endunless %}
+
+                  {% assign propertySize = item.properties | size %}
+                  {% if propertySize > 0 %}
+                    <dl class="product-item-options properties" data-cart-item="{{ item.id }}" data-cart-item-key="{{ item.key }}">
+                      {% for property in item.properties %}
+                      {% assign first_character_in_key = property.first | truncate: 1, '' %}
+                      {% unless property.last == blank or first_character_in_key == '_' %}
+                      <div class="property-item">
+                        <dt class="label" data-name="{{ property.first }}">{{ property.first }}</dt>
+                        <dd class="values" data-value="{{ property.last }}">
+                          {% if property.last contains '/uploads/' %}
+                        <dd><a class="lightbox" href="{{ property.last }}">{{ property.last | split: '/' | last }}</a></dd>
+                        {% else %}
+                        {{ property.last }}
+                        {% endif %}
+                        </dd>
+                      </div>
+                    {% endunless %}
+                    {% endfor %}
+                    </dl>
+                  {% endif %}
+                  
+                  <div class="price">
+                    <strong>{{ item.price | money }}</strong>
+                  </div>
+                  <div class="details-qty">
+                    <input type="number" class="item-qty" data-cart-item="{{ item.key }}" data-item-qty="{{ item.quantity }}" value="{{ item.quantity }}">
+                    <button class="update-cart-item" data-cart-item="{{ item.key }}" title="{{ 'cart.minicart.update' | t }}">
+                        <span>{{ 'cart.minicart.update' | t }}</span>
+                    </button>
+                    <a href="#" class="action delete" data-cart-item="{{ item.key }}" title="{{ 'cart.minicart.remove' | t }}">
+                      <span>{{ 'cart.minicart.remove' | t }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+
+			<div class="summary">
+				<div class="subtotal">
+          <span class="subtotal-title">{{ 'cart.general.subtotal' | t }}</span>
+          <span class="subtotal-price">{{ cart.total_price | money }}</span>
+				</div>
+			</div>
+			
+			<div class="actions">
+				<div class="viewcart">
+						<a href="/cart" class="btn">{{ 'cart.general.view_and_edit_cart' | t }}</a>
+				</div>
+				<div class="checkout">
+					<a href="/checkout" class="btn btn--secondary">{{ 'cart.general.go_to_checkout' | t }}</a>
+				</div>
+			</div>
+		
+		{% else %}
+			
+			<p class="empty">{{ 'cart.general.empty' | t }}</p>
+			
+		{% endif %}
+	</div>
+</div>

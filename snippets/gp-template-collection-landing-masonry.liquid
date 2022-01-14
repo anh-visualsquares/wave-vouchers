@@ -1,0 +1,46 @@
+{% assign container_class = 'container' %}
+{% if settings.collection_landing_layout_width_masonry == 'fullwidth' %}
+  {% assign container_class = 'container-fluid' %}
+{% endif %}
+<div class="gp-collection-landing gp-collection-landing-masonry">
+  <div class="{{ container_class }}">
+    {% include 'gp-linklist-for-collection-landing' %}
+    {% if currentLinklist != '' %}
+      {% assign singleProductText = 'collections.landing.product' | t %}
+      {% assign multiProductText = 'collections.landing.products' | t %}
+      <div class="row row-wrapper gp-mansory-wrapper row-{{ settings.collection_landing_item_per_row_desktop }} row-tablet-{{ settings.collection_landing_item_per_row_tablet }} row-mobile-{{ settings.collection_landing_item_per_row_mobile }}">
+        {% for link in currentLinklist.links %}
+          {% assign childCollectionHandle = link.url | split: '/' | last %}
+          {% if collections[childCollectionHandle].title != blank %}
+            {% assign childCollection = collections[childCollectionHandle] %}
+            <div class="col landing-masonry-item">
+              <div class="landing-categories--item">
+                <div class="landing-categories--thumb">
+                  <a href="{{ childCollection.url }}">
+                    <img class="img-fluid" src="{{ childCollection.image | img_url: 'master' }}" alt="{{ childCollection.title }}"/>
+                  </a>
+                </div>
+                <h2 class="title">{{ childCollection.title }}</h2>
+                <div class="landing-categories-detail">
+                  <div class="landing-categories--shortdes">
+                    <div class="category-description">{{ childCollection.description | truncate: 80 }}</div>
+                  </div>
+                  <a class="btn btn-product " href="{{ childCollection.url }}">{{ childCollection.all_products_count }} {{ childCollection.all_products_count | pluralize: singleProductText, multiProductText }}</a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>{{ 'collections.landing.no_sub_cate' | t }}</p>
+    {% endif %}
+  </div>
+</div>
+<script>
+  $(window).load(function() {
+    $('.gp-mansory-wrapper').masonry({
+      itemSelector: '.landing-masonry-item'
+    });
+  });
+</script>

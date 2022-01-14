@@ -1,0 +1,16 @@
+<div class="mobile-navigation">
+  {% include 'slideout-menu' %}
+</div>
+<div class="middle-header-content" {% if settings.header_middle_background_image != blank %}style="background-image: url({{ settings.header_middle_background_image | img_url: 'master' }})"{% endif %}>
+  <div class="container">
+    <div class="middle-header-wrapper">
+      <div class="toggle_menu_mobile"><span class="ti-menu"></span></div>
+      {% include 'header-logo' %}
+
+      <div class="child-content">
+        {% include 'header-cart' %}
+        {% include 'header-search' %}
+      </div>
+    </div>
+  </div>
+</div>

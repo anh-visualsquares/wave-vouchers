@@ -1,0 +1,7 @@
+{% comment %} Using for all CMS text as a block of section on collection page, product page {% endcomment %}
+{% if block.settings.title != blank %}
+  <h5>{{ block.settings.title }}</h5>
+{% endif %}
+<div>
+  {{ block.settings.content }}
+</div>

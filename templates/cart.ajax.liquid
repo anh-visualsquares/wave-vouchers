@@ -1,0 +1,15 @@
+{% layout none %}
+<div>
+  <div class="header-cart toggle-cart-{{ settings.minicart_type }} {% if cart.item_count == 0 %}empty{% endif %}">
+    <a class="action-cart" href="/cart/">
+        <span class="counter qty {% if cart.item_count == 0 %}empty{% endif %}">
+            <span class="counter-number">{{ cart.item_count }}</span>
+        </span>
+    </a>
+    {% if settings.minicart_type == 'dropdown' %}
+      {% include 'cart-dropdown' %}
+    {% else %}
+      {% include 'cart-slideout' %}
+    {% endif %}
+  </div>
+</div>

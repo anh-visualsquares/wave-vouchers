@@ -1,0 +1,427 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="gp-text-columns-with-image-section" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-text-columns-with-image gp-section-inner">
+    <div class="row">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text-column-with-image' %}
+              <div class="col-md-{{ block.settings.columns }} col-12" {{ block.shopify_attributes }}>
+                <div class="block-{{ block.type }}-wrapper align-{{ block.settings.alignment }} image-align-{{ block.settings.image_alignment }} image-position-{{ block.settings.image_position }} position-{{ forloop.index }}">
+                  
+                  {% capture imageHtml %}
+                    <div class="image-wrapper">
+                      {% if block.settings.image != blank %}
+                        <img src="{{ block.settings.image | img_url: 'master' }}" alt="" />
+                      {% else %}
+                        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                    </div>
+                  {% endcapture %}
+                  
+                  {% if block.settings.image_position == 'top' or block.settings.image_position == 'left' %}
+                    {{ imageHtml }}
+                  {% endif %}
+                  {% if block.settings.content != blank %}
+                    <div class="content">
+                      {{ block.settings.content }}
+                    </div>
+                  {% endif %}
+                  {% if block.settings.image_position == 'bottom' or block.settings.image_position == 'right' %}
+                    {{ imageHtml }}
+                  {% endif %}
+                </div>
+              </div>
+              <style>
+                {% if block.settings.image_width != blank %}
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }} .image-wrapper img{
+                    width: {{ block.settings.image_width }};
+                    height: auto;
+                  }
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-left .image-wrapper,
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-right .image-wrapper{
+                    width: {{ block.settings.image_width }};
+                  }
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-left .image-wrapper img,
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-right .image-wrapper img{
+                    width: 100%;
+                  }
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-left .content,
+                  [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-right .content{
+                    width: calc(100% - {{ block.settings.image_width }});
+                  }
+                {% endif %}
+              </style>
+            {% else %}
+              {% include 'gp-block-heading' %}
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "GPS Text columns & image",
+    "class": "index-section",
+    "settings": [
+      {
+				"type": "header",
+				"content": "Common settings"
+			},
+      {
+        "type": "checkbox",
+        "id": "fullwidth",
+        "label": "Fullwidth",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "checkbox",
+        "id": "background_cover",
+        "label": "Background cover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "background_parallax",
+        "label": "Background parallax",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "background_repeat",
+        "label": "Background repeat",
+        "default": "no-repeat",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "Repeat"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Repeat-x"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Repeat-y"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_x",
+        "label": "Background position(x)",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_y",
+        "label": "Background position(y)",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "header",
+				"content": "Padding & Margin"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "padding_left",
+        "label": "Padding left",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_right",
+        "label": "Padding right",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading content",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Heading title</h2>\n<p>Lorem ipsum dolo sit amet.</p>"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Margin"
+          },
+          {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 30
+          }
+        ]
+      },
+      {
+        "type": "text-column-with-image",
+        "name": "Text column with image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "select",
+            "id": "image_position",
+            "label": "Image position",
+            "default": "top",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              },
+              {
+                "value": "top",
+                "label": "Top"
+              },
+              {
+                "value": "bottom",
+                "label": "Bottom"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "image_alignment",
+            "label": "Image alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "image_width",
+            "label": "Image width (optional)",
+            "info": "Eg: 50px, 30%"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "HTML content",
+            "default": "<h4>Lorem ipsum</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>"
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "label": "Content alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "columns",
+            "label": "Columns",
+            "default": 4,
+            "min": 1,
+            "max": 12
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "GPS Text columns & image",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "text-column-with-image"
+        },
+        {
+          "type": "text-column-with-image"
+        },
+        {
+          "type": "text-column-with-image"
+        }
+      ]
+    }]
+  }
+{% endschema %}

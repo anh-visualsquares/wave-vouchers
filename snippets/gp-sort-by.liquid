@@ -1,0 +1,19 @@
+{% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+{% if sort_type == 'select' %}
+  <div class="sort-by sort-by-select">
+    <select>
+      {%- for option in collection.sort_options -%}
+        <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>{{ option.name }}</option>
+      {%- endfor -%}
+    </select>
+  </div>
+{% else %}
+  <div class="sort-by sort-by-ul">
+    <h5>{{ 'collections.sorting.title' | t }}</h5>
+    <ul>
+      {%- for option in collection.sort_options -%}
+        <li><a data-sort="{{ option.value }}" class="{% if option.value == sort_by %} active {% endif %}" href="#">{{ option.name }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endif %}

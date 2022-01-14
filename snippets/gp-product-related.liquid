@@ -1,0 +1,100 @@
+<div class="col-12 gp-product-related {{ class }}">
+  <!-- related by collection -->
+  {% assign existed_handle = product.handle %}
+  {% assign related_product_handles = '' %}
+
+  {% for collection in product.collections %}
+    {% if collection.title != 'Home page' %}
+      {% assign current_collection = collections[collection.handle] %}
+      {% for productItem in current_collection.products %}
+        {% assign not_existed = true %}
+        {% if existed_handle == productItem.handle %}
+          {% assign not_existed = false %}
+        {% endif %}
+        
+        {% if not_existed %}
+          {% assign relatedHandleArr = related_product_handles | split: ',' %}
+          {% unless relatedHandleArr contains productItem.handle %}
+            {% if related_product_handles != '' %}
+              {% assign related_product_handles = related_product_handles | append: ',' %}
+            {% endif %}
+            
+            {% assign related_product_handles = related_product_handles | append: productItem.handle %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% if related_product_handles != '' %}
+    <div class="gp-related-products" id="gp-related-products">
+      <div class="related-title">
+        {% if class == 'sidebar-related' %}
+          <h5 class="big-desktop-only">{{ 'products.product.related_products' | t }}</h5>
+          <h2 class="below-992-only">{{ 'products.product.related_products' | t }}</h2>
+        {% else %}
+          <h2>{{ 'products.product.related_products' | t }}</h2>
+        {% endif %}
+      </div>
+      <div class="related-items">
+        {% assign count_product_main = 1 | plus: 0 %}
+        {% assign count_product_sidebar_desktop = 1 | plus: 0 %}
+        {% assign count_product_sidebar_mobile = 1 | plus: 0 %}
+        {% assign related_product_handle_items = related_product_handles | split: ',' %}
+        {% assign limit = related_product_handle_items.size %}
+        {% if limit > 15 %}
+          {% assign limit = 15 %}
+        {% endif %}
+        {% if class == 'sidebar-related' %}
+          <div class="big-desktop-only">
+            <div class="product_items slick-related">
+              {% for related_product_handle in related_product_handle_items %}
+                {% if count_product_sidebar_desktop <= limit %}
+                  {% assign modulo = count_product_sidebar_desktop | modulo: relatedNumberPerSlide %}
+                  {% if modulo == 1 %}
+                    {% if count_product_sidebar_desktop > 1 %}
+                      </div>
+                    {% endif %}
+                    <div class="many-products-per-slide-item">
+                  {% endif %}
+                      <div class="product-item">
+                        {% assign productItem = all_products[related_product_handle] %}
+                        {% include 'gp-product-list' with product: productItem, hideDescription: true, hideReview: true, customClass: 'minimized' %}
+                      </div>
+                  {% if count_product_sidebar_desktop == limit %}
+                    </div>
+                  {% endif %}
+                {% endif %}
+                {% assign count_product_sidebar_desktop = count_product_sidebar_desktop | plus:1 %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="below-992-only">
+            <div class="product_items slick-related">
+              {% for related_product_handle in related_product_handle_items %}
+                {% if count_product_sidebar_mobile <= limit %}
+                  <div class="product-item">
+                    {% assign productItem = all_products[related_product_handle] %}
+                    {% include 'gp-product-grid' with product: productItem %}
+                  </div>
+                {% endif %}
+                {% assign count_product_sidebar_mobile = count_product_sidebar_mobile | plus:1 %}
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="product_items slick-related">
+            {% for related_product_handle in related_product_handle_items %}
+              {% if count_product_main <= limit %}
+                <div class="product-item">
+                  {% assign productItem = all_products[related_product_handle] %}
+                  {% include 'gp-product-grid' with product: productItem %}
+                </div>
+              {% endif %}
+              {% assign count_product_main = count_product_main | plus:1 %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>

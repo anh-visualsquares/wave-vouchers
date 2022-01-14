@@ -1,0 +1,41 @@
+{% assign container_class = 'container' %}
+{% if settings.collection_landing_layout_width_lookbook == 'fullwidth' %}
+  {% assign container_class = 'container-fluid no-padding' %}
+{% endif %}
+<div class="gp-collection-landing gp-collection-landing-lookbook">  
+  <div class="{{ container_class }}">
+    {% include 'gp-linklist-for-collection-landing' %}
+    {% if currentLinklist != '' %}
+      {% assign singleProductText = 'collections.landing.product' | t %}
+      {% assign multiProductText = 'collections.landing.products' | t %}
+      <div class="row row-12">
+        {% for link in currentLinklist.links %}
+          {% assign childCollectionHandle = link.url | split: '/' | last %}
+          {% if collections[childCollectionHandle].title != blank %}
+            {% assign childCollection = collections[childCollectionHandle] %}
+            <div class="col-12">
+              <div class="landing-parralax--item" style="background-image: url({{ childCollection.image | img_url: 'master' }});background-repeat:no-repeat;">
+                <div class="panel-block-row">
+                  <div class="landing-parralax-detail">
+                    <h2 class="title">
+                      <a title="{{ childCollection.title }}" href="{{ childCollection.url }}">{{ childCollection.title }}</a>
+                    </h2>
+                    <div class="landing-parralax--count">{{ childCollection.all_products_count }} {{ childCollection.all_products_count | pluralize: singleProductText, multiProductText }}</div>
+                    <div class="landing-parralax--shortdes">
+                      <div class="category-description">
+                        {{ childCollection.description | truncate: 80 }}
+                      </div>
+                    </div>
+                    <a class="btn btn-primary btn-lookbook" href="{{ childCollection.url }}">{{ 'collections.landing.shop_now' | t }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>{{ 'collections.landing.no_sub_cate' | t }}</p>
+    {% endif %}
+  </div>
+</div>

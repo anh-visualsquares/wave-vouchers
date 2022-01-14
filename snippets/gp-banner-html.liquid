@@ -1,0 +1,17 @@
+{% comment %} Using for all promo banner as a block of section on homepage, collection page, product page.... {% endcomment %}
+<div class="banner-item position-{{ forloop.index }} effect-{{ block.settings.hover_effect }}">
+  <div class="banner-item-img lazyload-parent">
+    {% if block.settings.url != blank %}
+      <a href="{{ block.settings.url }}" class="banner-item-url">
+    {% endif %}
+      {% if block.settings.image == blank %}
+        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+      {% else %}
+        <img src="{{ 'blank.png' | asset_img_url: 'master' }}" data-src="{{ block.settings.image | img_url: 'master' }}" alt="" class="lazyload"/>
+      {% endif %}
+    {% if block.settings.url != blank %}
+      </a>
+    {% endif %}
+  </div>
+</div>

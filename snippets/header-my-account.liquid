@@ -1,0 +1,48 @@
+<div class="my-account-link">
+  <div class="actions toggle-toplinks">
+    <a class="toggle-action" href="#">{% if showIcon %}<span class="ti-user"></span>{% else %}{{ 'customer.account.title' | t }}{% endif %}</a>
+  </div>
+  <div class="toplinks-content">
+    <ul class="top-links">
+      {% if customer %}
+        <li class="account-link">
+          <a href="/account">{{ 'customer.account.title' | t }}</a>
+        </li>
+      {% else %}
+        <li class="login-link">
+          <a href="/account/login">{{ 'customer.login.sign_in' | t }}</a>
+        </li>
+        <li class="register-link">
+          <a href="/account/register">{{ 'customer.register.title' | t }}</a>
+        </li>
+      {% endif %}
+      {% if settings.product_page_show_add_to_wishlist %}
+        <li class="link wishlist">
+          <a href="#">{{ 'customer.account.my_wishlist' | t }}</a>
+        </li>
+      {% else %}
+        {% unless settings.collection_page_hide_add_to_wishlist %}
+          <li class="link wishlist">
+            <a href="#">{{ 'customer.account.my_wishlist' | t }}</a>
+          </li>
+        {% endunless %}
+      {% endif %}
+      {% if settings.product_page_show_add_to_compare %}
+        <li class="link compare">
+          <a href="#">{{ 'customer.account.my_compare' | t }}</a>
+        </li>
+      {% else %}
+        {% unless settings.collection_page_hide_add_to_compare %}
+          <li class="link compare">
+            <a href="#">{{ 'customer.account.my_compare' | t }}</a>
+          </li>
+        {% endunless %}
+      {% endif %}
+      {% if customer %}
+        <li class="logout-link">
+          {{ 'layout.customer.log_out' | t | customer_logout_link }}
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+{% comment %} heading content of each section {% endcomment %}
+{% if block.settings.content != blank %}
+  <div class="col-12" {{ block.shopify_attributes }}>
+    <div class="section-heading-content position-{{ forloop.index }} text-{{ block.settings.text_alignment }}">
+      {{ block.settings.content }}
+    </div>
+    <style>
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }}{
+        {% if block.settings.margin_top > 0 %}
+          margin-top: {{ block.settings.margin_top }}px;
+        {% endif %}
+        {% if block.settings.margin_bottom > 0 %}
+          margin-bottom: {{ block.settings.margin_bottom }}px;
+        {% endif %}
+      }
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} *{
+        color: {{ block.settings.text_color }};
+      }
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h1,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h2,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h3,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h4,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h5,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h6,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h1,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h2,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h3,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h4,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h5,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h6,
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .title{
+        color: {{ block.settings.heading_color }};
+      }
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h1:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h2:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h3:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h4:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h5:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h6:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h1:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h2:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h3:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h4:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h5:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h6:not([class*="margin"]),
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .title:not([class*="margin"]){
+        margin-bottom: 20px;
+      }
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} a{
+        color: {{ block.settings.link_color }};
+      }
+      [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} a:hover{
+        color: {{ block.settings.link_hover_color }};
+      }
+      @media (max-width: 767px) {
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }}{
+          {% if block.settings.margin_top > 20 %}
+            margin-top: 20px;
+          {% endif %}
+          {% if block.settings.margin_bottom > 20 %}
+            margin-bottom: 20px;
+          {% endif %}
+        }
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h1,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h2,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h3,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h4,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h5,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} h6,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h1,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h2,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h3,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h4,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h5,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .h6,
+        [data-section-id="{{ section.id }}"] .section-heading-content.position-{{ forloop.index }} .title{
+          margin-bottom: 15px;
+        }
+      }
+    </style>
+  </div>
+{% endif %}

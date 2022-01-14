@@ -1,0 +1,285 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="text-section" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-text gp-section-inner">
+    <div class="row">
+      {% if section.settings.content != blank %}
+        <div class="col-12">
+          <div class="gp-text-content text-{{ section.settings.text_alignment }}">
+            {{ section.settings.content }}
+          </div>
+        </div>
+        <style>
+          [data-section-id="{{ section.id }}"] .gp-text-content *{
+            color: {{ section.settings.text_color }};
+          }
+          [data-section-id="{{ section.id }}"] .gp-text-content h1,
+          [data-section-id="{{ section.id }}"] .gp-text-content h2,
+          [data-section-id="{{ section.id }}"] .gp-text-content h3,
+          [data-section-id="{{ section.id }}"] .gp-text-content h4,
+          [data-section-id="{{ section.id }}"] .gp-text-content h5,
+          [data-section-id="{{ section.id }}"] .gp-text-content h6,
+          [data-section-id="{{ section.id }}"] .gp-text-content .h1,
+          [data-section-id="{{ section.id }}"] .gp-text-content .h2,
+          [data-section-id="{{ section.id }}"] .gp-text-content .h3,
+          [data-section-id="{{ section.id }}"] .gp-text-content .h4,
+          [data-section-id="{{ section.id }}"] .gp-text-content .h5,
+          [data-section-id="{{ section.id }}"] .gp-text-content .h6,
+          [data-section-id="{{ section.id }}"] .gp-text-content .title{
+            color: {{ section.settings.heading_color }};
+            margin-bottom: 20px;
+          }
+          [data-section-id="{{ section.id }}"] .gp-text-content a{
+            color: {{ section.settings.link_color }};
+          }
+          [data-section-id="{{ section.id }}"] .gp-text-content a:hover{
+            color: {{ section.settings.link_hover_color }};
+          }
+          @media (max-width: 767px) {
+            [data-section-id="{{ section.id }}"] .gp-text-content h1,
+            [data-section-id="{{ section.id }}"] .gp-text-content h2,
+            [data-section-id="{{ section.id }}"] .gp-text-content h3,
+            [data-section-id="{{ section.id }}"] .gp-text-content h4,
+            [data-section-id="{{ section.id }}"] .gp-text-content h5,
+            [data-section-id="{{ section.id }}"] .gp-text-content h6,
+            [data-section-id="{{ section.id }}"] .gp-text-content .h1,
+            [data-section-id="{{ section.id }}"] .gp-text-content .h2,
+            [data-section-id="{{ section.id }}"] .gp-text-content .h3,
+            [data-section-id="{{ section.id }}"] .gp-text-content .h4,
+            [data-section-id="{{ section.id }}"] .gp-text-content .h5,
+            [data-section-id="{{ section.id }}"] .gp-text-content .h6,
+            [data-section-id="{{ section.id }}"] .gp-text-content .title{
+              margin-bottom: 15px;
+            }
+          }
+        </style>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "GPS Text",
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Specific settings"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Content",
+      "default": "<h2>Heading title</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#c61932"
+    },
+    {
+      "type": "header",
+      "content": "Common settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "fullwidth",
+      "label": "Fullwidth",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_cover",
+      "label": "Background cover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "background_parallax",
+      "label": "Background parallax",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "background_repeat",
+      "label": "Background repeat",
+      "default": "no-repeat",
+      "options": [
+        {
+          "value": "no-repeat",
+          "label": "No repeat"
+        },
+        {
+          "value": "repeat",
+          "label": "Repeat"
+        },
+        {
+          "value": "repeat-x",
+          "label": "Repeat-x"
+        },
+        {
+          "value": "repeat-y",
+          "label": "Repeat-y"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_pos_x",
+      "label": "Background position(x)",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_pos_y",
+      "label": "Background position(y)",
+      "default": "center",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Padding & Margin"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "Padding left",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "label": "Padding right",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    }
+  ],
+  "presets": [{
+    "name": "GPS Text",
+    "category": "Text"
+  }]
+}
+{% endschema %}

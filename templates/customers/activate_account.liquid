@@ -1,0 +1,35 @@
+{% include 'gp-page-title' %}
+<div class="active-account-template margin-top30">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="gp-active-account-wrapper">
+          <div class="margin-bottom20">
+          <p>{{ 'customer.activate_account.subtext' | t }}</p>
+        </div>
+
+        <div class="form-vertical">
+          {% form 'activate_customer_password' %}
+
+            {%- if form.errors -%}
+              <div class="form-message form-message--error">
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+
+            <label for="CustomerPassword">{{ 'customer.activate_account.password' | t }}</label>
+            <input type="password" value="" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.activate_account.password' | t }}">
+
+            <label for="CustomerPasswordConfirmation">{{ 'customer.activate_account.password_confirm' | t }}</label>
+            <input type="password" value="" name="customer[password_confirmation]" id="CustomerPasswordConfirmation" placeholder="{{ 'customer.activate_account.password_confirm' | t }}">
+            <div class="gp-active-account-btns">
+              <input type="submit" class="btn" value="{{ 'customer.activate_account.submit' | t }}">
+              <input type="submit" class="btn-2" name="decline" value="{{ 'customer.activate_account.cancel' | t }}">
+            </div>
+          {% endform %}
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

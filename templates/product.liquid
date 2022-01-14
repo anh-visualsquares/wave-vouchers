@@ -1,0 +1,11 @@
+{% comment %} DEFAULT PRODUCT TEMPLATE {% endcomment %}
+{% case settings.product_page_layout %}
+  {% when '1-column' %}
+    {% section 'gp-product-template-1-column' %}
+  {% when '2-columns-left' %}
+    {% section 'gp-product-template-2-columns-left' %}
+  {% when '2-columns-right' %}
+    {% section 'gp-product-template-2-columns-right' %}
+  {% when '3-columns' %}
+    {% section 'gp-product-template-3-columns' %}
+{% endcase %}

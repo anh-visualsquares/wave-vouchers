@@ -1,0 +1,39 @@
+<div class="gp-popup gp-popup-compare" id="gp-popup-compare">
+  <div class="popup__columns">
+    <div class="ajax_header">
+      <h2>{{ 'general.compare.compare_products' | t }}</h2>
+      <button title="Close (Esc)" type="button" class="mfp-close"></button>
+    </div>
+    <div class="compare-popup-content">
+      <div class="compare-wrapper" style="display:none;">
+        <table class="compare-products">
+          <thead>
+            <tr  class="compare-remove">
+              <th scope="row"><span>{{ 'general.compare.remove_product' | t }}</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="compare-image">
+              <th scope="row"><span>{{ 'general.compare.product_image' | t }}</span></th>
+            </tr>
+            <tr class="compare-title">
+              <th scope="row"><span>{{ 'general.compare.product_title' | t }}</span></th>
+            </tr>
+            <tr class="compare-price">
+              <th scope="row"><span>{{ 'general.compare.product_price' | t }}</span></th>
+            </tr>
+            <tr class="compare-type">
+              <th scope="row"><span>{{ 'general.compare.product_type' | t }}</span></th>
+            </tr>
+            <tr class="compare-vendor">
+              <th scope="row"><span>{{ 'general.compare.product_vendor' | t }}</span></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="compare-wrapper-empty" style="display:none;">
+        {{ 'general.compare.empty' | t }}
+      </div>
+    </div>
+  </div>
+</div>

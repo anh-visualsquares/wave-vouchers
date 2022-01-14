@@ -1,0 +1,76 @@
+{% assign dropdownWidth = block.settings.dropdown_content_width %}
+{% assign temp = 12 | divided_by: dropdownWidth %}
+{% assign colLeftClass = block.settings.left_content_width | times: temp %}
+{% if colLeftClass > 12 %}
+  {% assign colLeftClass = 12 %}
+{% endif %}
+{% assign colRightClass = block.settings.right_content_width | times: temp %}
+{% if colRightClass > 12 %}
+  {% assign colRightClass = 12 %}
+{% endif %}
+
+{% assign colMenuClass = 12 %}
+{% if block.settings.left_content != blank %}
+  {% assign colMenuClass = colMenuClass | minus: colLeftClass %}
+{% endif %}
+{% if block.settings.right_content != blank %}
+  {% assign colMenuClass = colMenuClass | minus: colRightClass %}
+{% endif %}
+{% if colMenuClass <= 0 %}
+  {% assign colMenuClass = 12 %}
+{% endif %}
+<div class="mega-menu-content">
+  <div class="row">
+    {% if block.settings.top_content != blank %}
+      <div class="top-content static-content col-12">
+        {{ block.settings.top_content }}
+      </div>
+    {% endif %}
+    {% if block.settings.left_content != blank %}
+      <div class="left-content static-content col-md-{{ colLeftClass }} col-12">
+        {{ block.settings.left_content }}
+      </div>
+    {% endif %}
+    {% if block.settings.menu != blank %}
+      <div class="middle-content col-md-{{ colMenuClass }} col-12">
+        <div class="row">
+          {% assign colChildWidth = colMenuClass | divided_by: temp %}
+          {% assign colChildClass = 12 | divided_by: colChildWidth %}
+
+          {% for link in linklists[block.settings.menu].links %}
+            <div class="col-md-{{ colChildClass }} col-12">
+              {% assign child_list_handle = link.title | handle %}
+              {% assign hasChild = false %}
+              {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+                {% assign hasChild = true %}
+              {% endif %}
+              <a href="{{ link.url }}" class="{% if hasChild %}megamenu-sub-title{% endif %}">{{ link.title }}</a>
+              {% if hasChild %}
+                <span class="toggle-menu">
+                  <span class="icon-plus"></span>
+                </span>
+                <ul class="sub-sub-menu">
+                  {% for link in linklists[child_list_handle].links %}
+                    <li>
+                      <a href="{{ link.url }}">{{ link.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% if block.settings.right_content != blank %}
+      <div class="right-content static-content col-md-{{ colRightClass }} col-12">
+        {{ block.settings.right_content }}
+      </div>
+    {% endif %}
+    {% if block.settings.bottom_content != blank %}
+      <div class="bottom-content static-content col-12">
+        {{ block.settings.bottom_content }}
+      </div>
+    {% endif %}
+  </div>
+</div>

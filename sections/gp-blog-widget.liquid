@@ -1,0 +1,375 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="gp-blog-posts" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-blog-posts gp-section-inner">
+    <div class="row">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'heading' %}
+              {% include 'gp-block-heading' %}
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+      <div class="col-12">
+        {% assign article_per_row = section.settings.article_per_row %}
+        {% assign article_limit = section.settings.limit %}
+        <div class="row row-wrapper row-{{ article_per_row }} row-tablet-3 row-mobile-1">
+          {% if section.settings.blog != blank %}
+            {%- assign blog = blogs[section.settings.blog] -%}
+            {% unless blog.articles_count == 0 %}
+              {% for article in blog.articles limit: article_limit %}
+                <div class="col">
+                  <div class="blog-post margin-bottom30">
+                    <div class="post-image">
+                      <a href="{{ article.url }}" title="{{ article.title }}" {% if article.image != blank %}style="background-image: url({{ article.image | img_url: 'master' }});"{% endif %}>
+                        {% if article.image != blank %}
+                          <img src="{{ article.image | img_url: 'master' }}" alt=""/>
+                        {% endif %}
+                      </a>
+                    </div>
+                    <div class="post-content margin-top15">
+                      <h5><a href="{{ article.url }}">{{ article.title }}</a></h5>
+                      <div class="time-blog margin-top10">
+                        <span class="date"><i class="ion-android-calendar"></i> {{ article.published_at | time_tag: '%d %b, %Y' }}</span>
+                        <span class="comment-count margin-left10"><i class="ion-chatbubble-working"></i> {{ article.comments_count }}
+                          {% if article.comments_count <= 1 %}
+                            {{ 'blogs.article.comment' | t }}
+                          {% else %}
+                            {{ 'blogs.article.comments' | t }}
+                          {% endif %}
+                        </span>
+                      </div>
+                      <div class="blog-short-desc margin-top10">
+                        {% if article.excerpt != blank %}
+                          {{ article.excerpt | strip_html | truncate: 120 , ' ' }}...
+                        {% else %}
+                          {{ article.content | strip_html | truncate: 120 , ' ' }}...
+                        {% endif %}
+                      </div>
+                      <div class="read-more-text margin-top10">
+                        <a href="{{ article.url }}" class="read-more-blog">{{ 'blogs.article.read_more' | t }}</a>
+                      </div> 
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endunless %}
+          {% else %}
+            {% for i in (1..article_limit) %}
+              <div class="col">
+                <div class="blog-post margin-bottom30">
+                  <div class="post-image">
+                    <a href="#" title=""></a>
+                  </div>
+                  <div class="post-content margin-top15">
+                    <h3>Blog post title</h3>
+                    <div class="time-blog margin-top10">
+                      <span class="date"><i class="ion-android-calendar"></i> 26 Mar, 2019</span>
+                      <span class="comment-count margin-left10"><i class="ion-chatbubble-working"></i> 0 {{ 'blogs.article.comment' | t }}</span>
+                    </div>
+                    <div class="blog-short-desc margin-top10">
+                      Etiam eget leo turpis. Quisque ultricies blandit erat quis viverra. Mauris mollis in libero ut porttitor. Quisque aliquet, mauris volutpa
+                    </div>
+                    <div class="read-more-text margin-top10">
+                      <a href="#" class="read-more-blog">{{ 'blogs.article.read_more' | t }}</a>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "GPS Products Widget",
+    "class": "index-section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Specific settings"
+      },
+      {
+        "type": "blog",
+        "id": "blog",
+        "label": "Blog"
+      },
+      {
+        "type": "range",
+        "id": "article_per_row",
+        "label": "Articles per row",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "default": 3
+      },
+      {
+        "type": "range",
+        "id": "limit",
+        "label": "Limit",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "default": 3
+      },
+      {
+				"type": "header",
+				"content": "Common settings"
+			},
+      {
+        "type": "checkbox",
+        "id": "fullwidth",
+        "label": "Fullwidth",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "checkbox",
+        "id": "background_cover",
+        "label": "Background cover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "background_parallax",
+        "label": "Background parallax",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "background_repeat",
+        "label": "Background repeat",
+        "default": "no-repeat",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "Repeat"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Repeat-x"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Repeat-y"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_x",
+        "label": "Background position(x)",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_y",
+        "label": "Background position(y)",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "header",
+				"content": "Padding & Margin"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_left",
+        "label": "Padding left",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_right",
+        "label": "Padding right",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading content",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>From Our Blog</h2>\n<p>Way is there to get clothing you're sure to love than by making it.</p>"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Margin"
+          },
+          {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 30
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "GPS Blog Posts",
+      "category": "Blog",
+      "blocks": [
+        {
+          "type": "heading"
+        }
+      ]
+    }]
+  }
+{% endschema %}

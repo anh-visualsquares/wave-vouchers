@@ -1,0 +1,617 @@
+{% include 'gp-page-title' %}
+
+{% assign page_width = settings.product_page_width_2_columns_left %}
+{% assign container_class = 'container' %}
+{% if page_width == 'fullwidth' %}
+  {% assign container_class = 'container-fluid' %}
+{% endif %}
+
+{% assign colClassSidebar = 'col-12 col-lg-3' %}
+{% assign colClassMain = 'col-12 col-lg-9' %}
+
+{% assign defaultTemplate = settings.product_page_default_template %}
+{% assign defaultZoom = settings.product_page_zoom %}
+{% assign staticContent = settings.product_page_cms_content %}
+{% assign relatedPosition = settings.product_page_related_position %}
+{% assign relatedNumberPerSlide = settings.product_page_related_number_of_item %}
+{% assign additionalTabTitle = settings.product_page_additional_tab_title %}
+{% assign additionalTabContent = settings.product_page_additional_tab_content %}
+
+{% if section.settings.use_settings %}
+  {% assign defaultTemplate = section.settings.default_template %}
+  {% assign defaultZoom = section.settings.zoom %}
+  {% assign staticContent = section.settings.cms_content %}
+  {% assign relatedPosition = section.settings.related_position %}
+  {% assign relatedNumberPerSlide = section.settings.related_number_of_item %}
+  {% assign additionalTabTitle = section.settings.additional_tab_title %}
+  {% assign additionalTabContent = section.settings.additional_tab_content %}
+{% endif %}
+
+{% comment %}
+  Get first variant, or deep linked one
+{% endcomment %}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign compare_at_price = current_variant.compare_at_price -%}
+{%- assign price = current_variant.price -%}
+
+<div class="gp-product-detail gp-product-detail-2-columns-left page-width-{{ page_width }} media-template-{{ defaultTemplate }}" id="ProductSection-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="product" data-enable-history-state="true">
+  {% if defaultTemplate == 'full-screen-multiple-slide' %}
+    {% include 'gp-product-media' %}
+  {% endif %}
+  <div class="{{ container_class }}">
+    <div class="row">
+      <div class="{{ colClassSidebar }} gp-product-sidebar-wrapper">
+        {% include 'gp-product-sidebar' %}
+      </div>
+      <div class="{{ colClassMain }}">
+        <div class="row">
+          {% unless defaultTemplate == 'full-screen-multiple-slide' %}
+            <div class="col-12 col-lg-6 gp-product-col-media">
+              {% include 'gp-product-media' %}
+            </div>
+          {% endunless %}
+          {% include 'gp-product-main-content' %}
+          {% include 'gp-product-tabs' %}
+          {% if relatedPosition == 'main-content' %}
+            {% include 'gp-product-related', class: 'main-related' %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Override default values of shop.strings for each template.
+  // Alternate product templates can change values of
+  // add to cart button, sold out, and unavailable states here.
+  theme.productStrings = {
+    addToCart: {{ 'products.product.add_to_cart' | t | json }},
+    soldOut: {{ 'products.product.sold_out' | t | json }},
+    unavailable: {{ 'products.product.unavailable' | t | json }}
+  }
+</script>
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "url": "{{ shop.url }}{{ product.url }}",
+  {%- if product.featured_image -%}
+    {%- assign image_size = product.featured_image.width | append: 'x' -%}
+    "image": [
+      "https:{{ product.featured_image.src | img_url: image_size }}"
+    ],
+  {%- endif -%}
+  "description": "{{ product.description | strip_html | escape }}",
+  {%- if current_variant.sku != blank -%}
+    "sku": "{{ current_variant.sku }}",
+  {%- endif -%}
+  "brand": {
+    "@type": "Thing",
+    "name": "{{ product.vendor | escape }}"
+  },
+  "offers": [
+    {%- for variant in product.variants -%}
+      {
+        "@type" : "Offer",
+        {%- if variant.sku != blank -%}
+          "sku": "{{ variant.sku }}",
+        {%- endif -%}
+        "availability" : "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+        "price" : "{{ variant.price | divided_by: 100.00 }}",
+        "priceCurrency" : "{{ cart.currency.iso_code }}",
+        "url" : "{{ shop.url }}{{ variant.url }}"
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{% schema %}
+{
+  "name": "2-columns-left products",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This section contain settings for product page which used 2-columns-left layout. Adding blocks to show on sidebar."
+    },
+    {
+      "type": "header",
+      "content": "Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_settings",
+      "label": "Use these values instead of default values",
+      "default": false,
+      "info": "By checking on it these settings below will override the settings on Theme Settings."
+    },
+    {
+      "type": "select",
+      "id": "default_template",
+      "label": "Default Template",
+      "default": "gallery-list",
+      "options": [
+        {
+          "value": "gallery-list",
+          "label": "Gallery list"
+        },
+        {
+          "value": "vertical-thumbnail",
+          "label": "Vertical thumbnail"
+        },
+        {
+          "value": "horizontal-thumbnail",
+          "label": "Horizontal thumbnail"
+        },
+        {
+          "value": "no-thumbnail",
+          "label": "No thumbnail"
+        },
+        {
+          "value": "full-screen-multiple-slide",
+          "label": "Full screen multiple slide"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "zoom",
+      "label": "Zoom",
+      "default": "no-zoom",
+      "options": [
+        {
+          "value": "no-zoom",
+          "label": "No zoom"
+        },
+        {
+          "value": "light-box",
+          "label": "Light box"
+        },
+        {
+          "value": "hover-zoom",
+          "label": "Hover zoom"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "cms_content",
+      "label": "Static content"
+    },
+    {
+      "type": "text",
+      "id": "additional_tab_title",
+      "label": "Additional tab title"
+    },
+    {
+      "type": "textarea",
+      "id": "additional_tab_content",
+      "label": "Additional tab content"
+    },
+    {
+      "type": "select",
+      "id": "related_position",
+      "label": "Related product position",
+      "default": "main-content",
+      "options": [
+        {
+          "value": "no-display",
+          "label": "No display"
+        },
+        {
+          "value": "main-content",
+          "label": "Main content"
+        },
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "related_number_of_item",
+      "label": "Number of product per slide (for Sidebar only)",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_list",
+      "name": "Featured product",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_slider",
+          "label": "Enable slider",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "label": "Number of product",
+          "default": 3,
+          "min": 1,
+          "max": 10,
+          "step": 1
+        }
+      ]
+    },
+    {
+      "type": "banner",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Common Settings"
+        },
+        {
+          "type": "header",
+          "content": "Images"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Action URL"
+        },
+        {
+          "type": "header",
+          "content": "Effect"
+        },
+        {
+          "type": "select",
+          "id": "hover_effect",
+          "label": "Hover effect",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "No effect"
+            },
+            {
+              "value": "zoom",
+              "label": "Zoom"
+            },
+            {
+              "value": "border-zoom",
+              "label": "Border Zoom"
+            },
+            {
+              "value": "flashed",
+              "label": "Flashed"
+            },
+            {
+              "value": "zoom-flashed",
+              "label": "Zoom Flashed"
+            },
+            {
+              "value": "shadow-corner",
+              "label": "Shadow Corner"
+            },
+            {
+              "value": "zoom-shadow",
+              "label": "Zoom Shadow"
+            },
+            {
+              "value": "cup-border",
+              "label": "Cup Border"
+            },
+            {
+              "value": "flashed-zoom",
+              "label": "Flashed Zoom"
+            },
+            {
+              "value": "zoom-out-shadow",
+              "label": "Zoom Out Shadow"
+            },
+            {
+              "value": "mist",
+              "label": "Mist"
+            },
+            {
+              "value": "mist-text",
+              "label": "Mist Text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "banner-with-content",
+      "name": "Image with content inside",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Common Settings"
+        },
+        {
+          "type": "header",
+          "content": "Images"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Action URL"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "<h2>Heading title</h2>\n<a href=\"#\">SHOP NOW</a>"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "link_color",
+          "label": "Link color",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "link_hover_color",
+          "label": "Link hover color",
+          "default": "#c61932"
+        },
+        {
+          "type": "header",
+          "content": "Content Layout"
+        },
+        {
+          "type": "text",
+          "id": "content_width",
+          "label": "Width",
+          "info": "Optional. Enter value of pixel, percentage. Eg: 400px, 50%."
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "default": "center",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Position",
+          "default": "middle-center",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top Left"
+            },
+            {
+              "value": "top-center",
+              "label": "Top Center"
+            },
+            {
+              "value": "top-right",
+              "label": "Top Right"
+            },
+            {
+              "value": "middle-left",
+              "label": "Middle Left"
+            },
+            {
+              "value": "middle-center",
+              "label": "Middle Center"
+            },
+            {
+              "value": "middle-right",
+              "label": "Middle Right"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom Left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom Center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom Right"
+            },
+            {
+              "value": "custom",
+              "label": "Custom"
+            },
+            {
+              "value": "custom-horizontal",
+              "label": "Custom horizontal, middle Vertical"
+            },
+            {
+              "value": "custom-vertical",
+              "label": "Custom vertical, center Horizontal"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Only applicable on *Custom* position"
+        },
+        {
+          "type": "select",
+          "id": "content_position_custom_x_direction",
+          "label": "Horizontal alignment direction",
+          "default": "left-to-right",
+          "options": [
+            {
+              "value": "left-to-right",
+              "label": "Align from left"
+            },
+            {
+              "value": "right-to-left",
+              "label": "Align from right"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "content_position_custom_x",
+          "label": "Horizontal alignment",
+          "default": 30,
+          "min": 0,
+          "max": 50,
+          "unit": "%"
+        },
+        {
+          "type": "select",
+          "id": "content_position_custom_y_direction",
+          "label": "Vertical alignment direction",
+          "default": "top-to-bottom",
+          "options": [
+            {
+              "value": "top-to-bottom",
+              "label": "Align from top"
+            },
+            {
+              "value": "bottom-to-top",
+              "label": "Align from bottom"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "content_position_custom_y",
+          "label": "Vertical alignment",
+          "default": 30,
+          "min": 0,
+          "max": 50,
+          "unit": "%"
+        },
+        {
+          "type": "header",
+          "content": "Effect"
+        },
+        {
+          "type": "select",
+          "id": "hover_effect",
+          "label": "Hover effect",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "No effect"
+            },
+            {
+              "value": "zoom",
+              "label": "Zoom"
+            },
+            {
+              "value": "border-zoom",
+              "label": "Border Zoom"
+            },
+            {
+              "value": "flashed",
+              "label": "Flashed"
+            },
+            {
+              "value": "zoom-flashed",
+              "label": "Zoom Flashed"
+            },
+            {
+              "value": "shadow-corner",
+              "label": "Shadow Corner"
+            },
+            {
+              "value": "zoom-shadow",
+              "label": "Zoom Shadow"
+            },
+            {
+              "value": "cup-border",
+              "label": "Cup Border"
+            },
+            {
+              "value": "flashed-zoom",
+              "label": "Flashed Zoom"
+            },
+            {
+              "value": "zoom-out-shadow",
+              "label": "Zoom Out Shadow"
+            },
+            {
+              "value": "mist",
+              "label": "Mist"
+            },
+            {
+              "value": "mist-text",
+              "label": "Mist Text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

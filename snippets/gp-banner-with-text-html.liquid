@@ -1,0 +1,105 @@
+{% comment %} Using for all promo banner as a block of section on homepage, collection page, product page.... {% endcomment %}
+<div class="banner-item position-{{ forloop.index }} effect-{{ block.settings.hover_effect }} {% if isParallax %}parallax-banner{% endif %}">
+  <div class="banner-item-img {% if block.settings.image != blank %}lazyload-parent{% endif %}">
+    {% if block.settings.image == blank %}
+      {% unless isParallax %}
+        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endunless %}
+    {% else %}
+      <img src="{{ 'blank.png' | asset_img_url: 'master' }}" data-src="{{ block.settings.image | img_url: 'master' }}" alt="" class="lazyload"/>
+    {% endif %}
+  </div>
+  {% if block.settings.content != blank %}
+    <div class="banner-content-wrapper position-{{ block.settings.content_position }} position-x-{{ block.settings.content_position_custom_x_direction }} position-y-{{ block.settings.content_position_custom_y_direction }}">
+      {% if block.settings.url != blank %}
+        <a href="{{ block.settings.url }}" class="banner-item-url"></a>
+      {% endif %}
+      {% assign style = '' %}
+      {% if block.settings.content_width != blank %}
+        {% assign style = style | append: 'width:' | append: block.settings.content_width | append: '; max-width:100%;' %}
+      {% else %}
+        {% assign style = style | append: 'width: auto;' %}
+      {% endif %}
+      {% if block.settings.content_position == 'custom' %}
+        {% if block.settings.content_position_custom_x_direction == 'left-to-right' %}
+          {% assign style = style | append: 'left:' | append: block.settings.content_position_custom_x | append: '%;' %}
+        {% else %}
+          {% assign style = style | append: 'right:' | append: block.settings.content_position_custom_x | append: '%;' %}
+        {% endif %}
+        {% if block.settings.content_position_custom_y_direction == 'top-to-bottom' %}
+          {% assign style = style | append: 'top:' | append: block.settings.content_position_custom_y | append: '%;' %}
+        {% else %}
+          {% assign style = style | append: 'bottom:' | append: block.settings.content_position_custom_y | append: '%;' %}
+        {% endif %}
+      {% endif %}
+      {% if block.settings.content_position == 'custom-horizontal' %}
+        {% if block.settings.content_position_custom_x_direction == 'left-to-right' %}
+          {% assign style = style | append: 'left:' | append: block.settings.content_position_custom_x | append: '%;' %}
+        {% else %}
+          {% assign style = style | append: 'right:' | append: block.settings.content_position_custom_x | append: '%;' %}
+        {% endif %}
+      {% endif %}
+      {% if block.settings.content_position == 'custom-vertical' %}
+        {% if block.settings.content_position_custom_y_direction == 'top-to-bottom' %}
+          {% assign style = style | append: 'top:' | append: block.settings.content_position_custom_y | append: '%;' %}
+        {% else %}
+          {% assign style = style | append: 'bottom:' | append: block.settings.content_position_custom_y | append: '%;' %}
+        {% endif %}
+      {% endif %}
+      <div class="banner-content-inner text-align-{{ block.settings.text_alignment }}" style="{{ style }}">
+        {{ block.settings.content }}
+      </div>
+    </div>
+  {% endif %}
+  <style>
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner *,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner p{
+      color: {{ block.settings.text_color }};
+      letter-spacing: 1px;
+    }
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner h1,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner h2,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner h3,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner h4,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner h5,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner h6{
+      color: {{ block.settings.heading_color }};
+      letter-spacing: 2px;
+    }
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .title,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .h1,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .h2,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .h3,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .h4,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .h5,
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner .h6{
+      color: {{ block.settings.heading_color }};
+      letter-spacing: 2px;
+    }
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner a{
+      color: {{ block.settings.link_color }};
+    }
+    [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} .banner-content-inner a:hover{
+      color: {{ block.settings.link_hover_color }};
+    }
+    {% if isParallax and block.settings.image == blank %}
+      [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} {
+        background-image: url({{ 'banner-placeholder.svg' | asset_url }});
+        background-color: #f0f1f1;
+      }
+    {% endif %}
+    {% if isParallax and block.settings.image != blank %}
+      [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} {
+        background-image: url({{ block.settings.image | img_url: 'master' }});
+      }
+    {% endif %}
+    {% if isParallax and block.settings.image_mobile != blank %}
+      @media (max-width: 767px) {
+        [data-section-id="{{ section.id }}"] .banner-item.position-{{ forloop.index }} {
+          background-image: url({{ block.settings.image_mobile | img_url: 'master' }});
+        }
+      }
+    {% endif %}
+  </style>
+</div>

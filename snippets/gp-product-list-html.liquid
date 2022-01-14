@@ -1,0 +1,53 @@
+{% comment %} Using on sidebar product list as a block on collection and product page {% endcomment %}
+{% if block.settings.title != blank %}
+  <h5>{{ block.settings.title }}</h5>
+{% endif %}
+<div>
+  {% assign product_list_collection = collections[block.settings.collection] %}
+  {% assign productSize = product_list_collection.products.size %}
+  
+  {% if product_list_collection.products.size > 0 %}
+    {% if block.settings.enable_slider %}
+      {% assign limitProductFeatured = 15 %}
+      {% assign productPerSlide = block.settings.limit %}
+      {% if limitProductFeatured > productSize %}
+        {% assign limitProductFeatured = productSize %}
+      {% endif %}
+      {% assign countPr = 1 | plus: 0 %}
+      <div class="gp-cf-product-list-slider slick-product-list-slider">
+        {% for product in product_list_collection.products %}
+          {% if countPr <= limitProductFeatured %}
+            {% assign modulo = countPr | modulo: productPerSlide %}
+            {% if modulo == 1 %}
+              {% if countPr > 1 %}
+                </div>
+              {% endif %}
+              <div class="many-products-per-slide-item">
+            {% endif %}
+                <div class="product-item">
+                  {% include 'gp-product-list', hideDescription: true, hideReview: true, customClass: 'minimized' %}
+                </div>
+            {% if countPr == limitProductFeatured %}
+              </div>
+            {% endif %}
+          {% endif %}
+          {% assign countPr = countPr | plus: 1 %}
+        {% endfor %}
+      </div>
+    {% else %}
+      {% assign limit = block.settings.limit %}
+      {% if limit > productSize %}
+        {% assign limit = productSize %}
+      {% endif %}
+      <div class="row">
+        {% for product in product_list_collection.products limit: limit %}
+          <div class="col-12">
+            {% include 'gp-product-list', hideDescription: true, hideReview: true, customClass: 'minimized' %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    {{ 'collections.general.no_matches' | t }}
+  {% endif %}
+</div>

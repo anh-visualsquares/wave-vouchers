@@ -1,0 +1,48 @@
+{% if template.name == 'index' %}
+  <h1 class="h2 site-header__logo {% if settings.header_logo %}has-logo{% endif %}">
+{% else %}
+  <div class="h2 site-header__logo {% if settings.header_logo %}has-logo{% endif %}">
+{% endif %}
+
+  {% if settings.header_logo %}
+    <a href="/" class="site-header__logo-image {% if settings.header_logo_mobile %}desktop-only{% endif %}">
+      <img class="lazyload js"
+            src="{{ settings.header_logo | img_url: 'master' }}"
+            alt="{{ settings.header_logo.alt | default: shop.name | escape }}"
+            {% if settings.header_logo_max_width != blank %}
+            style="max-width: {{ settings.header_logo_max_width }}px"
+            {% endif %} />
+      <noscript>
+        <img src="{{ settings.header_logo | img_url: 'master' }}" 
+              alt="{{ settings.header_logo.alt | default: shop.name }}" 
+              {% if settings.header_logo_max_width != blank %}
+              style="max-width: {{ settings.header_logo_max_width }}px"
+              {% endif %} />
+      </noscript>
+    </a>
+  {% else %}
+    <a class="site-header__logo-link {% if settings.header_logo_mobile %}desktop-only{% endif %}" href="/">{{ shop.name }}</a>
+  {% endif %}
+  {% if settings.header_logo_mobile %}
+    <a href="/" class="site-header__logo-image mobile-only mobile-logo">
+      <img class="lazyload js"
+            src="{{ settings.header_logo_mobile | img_url: 'master' }}"
+            alt="{{ settings.header_logo_mobile.alt | default: shop.name | escape }}"
+            {% if settings.header_logo_max_width_mobile != blank %}
+            style="max-width: {{ settings.header_logo_max_width_mobile }}px"
+            {% endif %} />
+      <noscript>
+        <img src="{{ settings.header_logo_mobile | img_url: 'master' }}" 
+              alt="{{ settings.header_logo_mobile.alt | default: shop.name }}"
+              {% if settings.header_logo_max_width_mobile != blank %}
+              style="max-width: {{ settings.header_logo_max_width_mobile }}px"
+              {% endif %} />
+      </noscript>
+    </a>
+  {% endif %}
+
+{% if template.name == 'index' %}
+  </h1>
+{% else %}
+  </div>
+{% endif %}

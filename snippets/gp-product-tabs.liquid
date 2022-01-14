@@ -1,0 +1,51 @@
+<div class="col-12 gp-product-col-information">
+  {% assign hasActiveTab = false %}
+  <div class="product-detail-infomation">
+    <div class="product-data-items-title">
+      <div class="product-data-items-menu desktop-only">
+        {% if product.description != blank %}
+          {% assign hasActiveTab = true %}
+          <div class="tab-title active">
+            <a href="#attributedescription">{{ 'products.product.detail' | t }}</a>
+          </div>
+        {% endif %}
+        {% if additionalTabTitle != blank %}
+          <div class="tab-title {% unless hasActiveTab %}active{% endunless %}">
+            <a href="#additional">{{ additionalTabTitle }}</a>
+          </div>
+          {% assign hasActiveTab = true %}
+        {% endif %}
+        <div class="tab-title {% unless hasActiveTab %}active{% endunless %}">
+          <a href="#reviews" >{{ 'products.product.reviews' | t }}</a>
+        </div>
+      </div>
+      {% assign hasActiveContent = false %}
+      <div class="product-data-items-content">
+        {% if product.description != blank %}
+          {% assign hasActiveContent = true %}
+          <div class="tab-title mobile-only active">
+            <a href="#attributedescription">{{ 'products.product.detail' | t }}</a>
+          </div>
+          <div class="tab-content active" id="attributedescription">
+            {{ product.description }}
+          </div>
+        {% endif %}
+        {% if additionalTabTitle != blank %}
+          <div class="tab-title mobile-only {% unless hasActiveContent %}active{% endunless %}">
+            <a href="#additional">{{ additionalTabTitle }}</a>
+          </div>
+          <div class="tab-content {% unless hasActiveContent %}active{% endunless %}" id="additional">
+            {{ additionalTabContent }}
+          </div>
+          {% assign hasActiveContent = true %}
+        {% endif %}
+        <div class="tab-title mobile-only {% unless hasActiveContent %}active{% endunless %}">
+          <a href="#reviews">{{ 'products.product.reviews' | t }}</a>
+        </div>
+        <div class="tab-content {% unless hasActiveContent %}active{% endunless %}" id="reviews">
+          <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

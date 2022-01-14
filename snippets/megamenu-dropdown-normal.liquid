@@ -1,0 +1,20 @@
+<ul class="sub-menu">
+  {% for link in linklists[block.settings.menu].links %}
+    <li>
+      <a href="{{ link.url }}">{{ link.title }}</a>
+      {% assign child_list_handle = link.title | handle %}
+      {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+        <span class="toggle-menu">
+          <span class="icon-plus"></span>
+        </span>
+        <ul class="dropdown-menu">
+          {% for link in linklists[child_list_handle].links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,40 @@
+{% include 'gp-page-title' %}
+
+{% assign page_width = settings.collection_page_width_3_columns %}
+{% assign container_class = 'container' %}
+{% if page_width == 'fullwidth' %}
+  {% assign container_class = 'container-fluid' %}
+{% endif %}
+
+{% assign view_mode = settings.collection_page_view_mode %}
+{% assign colClassMain = 'col-12 col-md-9 col-lg-6' %}
+
+<div class="gp-collection gp-collection-3-columns page-width-{{ page_width }}">
+  <div class="{{ container_class }}">
+    <div class="row">
+      {% if collection.description != blank and settings.collection_page_description_position == 'above-products' %}
+        <div class="gp-collection-description col-12">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+
+      <div class="collection-sidebar-filter collection-sidebar-filter-left col-3">
+        {% section 'gp-collection-filter' %}
+      </div>
+
+      <div class="gp-products view-mode-{{ view_mode }} {{ colClassMain }} {% if view_mode == 'grid-list' %}viewing-grid{% endif %} {% if view_mode == 'list-grid' %}viewing-list{% endif %}">
+        {% section 'gp-collection-3-columns' %}
+      </div>
+
+      <div class="collection-sidebar-filter collection-sidebar-filter-right col-3 big-desktop-only">
+        {% section 'gp-collection-widget' %}
+      </div>
+
+      {% if collection.description != blank and settings.collection_page_description_position == 'below-products' %}
+        <div class="rte collection-description col-12">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,441 @@
+{% if section.blocks.size > 0 %}
+  <div class="gp-collection-filter-wrapper" data-section-id="{{ section.id }}" data-section-type="gp-product-slider">
+    <div class="row row-wrapper row-1">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'product_list' %}
+            {% if block.settings.collection != blank %}
+              <div class="col gp-cf-product-list">
+                <div class="gp-cf-inner">
+                  {% include 'gp-product-list-html' %}
+                </div>
+              </div>
+            {% endif %}
+          {% when 'banner' %}
+            <div class="col gp-cf-banner" {{ block.shopify_attributes }}>
+              <div class="gp-cf-inner">
+                {% include 'gp-banner-html' %}
+              </div>
+            </div>
+          {% when 'banner-with-content' %}
+            <div class="col gp-cf-banner" {{ block.shopify_attributes }}>
+              <div class="gp-cf-inner">
+                {% include 'gp-banner-with-text-html' %}
+              </div>
+            </div>
+          {% when 'text' %}
+            {% if block.settings.content != blank %}
+              <div class="col gp-cf-text">
+                <div class="gp-cf-inner">
+                  {% include 'gp-cms-text-html' %}
+                </div>
+              </div>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Additional column",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This section contain settings for the right column of 3-columns collections only."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "product_list",
+        "name": "Featured products",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "checkbox",
+            "id": "enable_slider",
+            "label": "Enable slider",
+            "default": true
+          },
+          {
+            "type": "range",
+            "id": "limit",
+            "label": "Number of product",
+            "default": 3,
+            "min": 1,
+            "max": 5,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "type": "banner",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Common Settings"
+          },
+          {
+            "type": "header",
+            "content": "Images"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Action URL"
+          },
+          {
+            "type": "header",
+            "content": "Effect"
+          },
+          {
+            "type": "select",
+            "id": "hover_effect",
+            "label": "Hover effect",
+            "default": "none",
+            "options": [
+              {
+                "value": "none",
+                "label": "No effect"
+              },
+              {
+                "value": "zoom",
+                "label": "Zoom"
+              },
+              {
+                "value": "border-zoom",
+                "label": "Border Zoom"
+              },
+              {
+                "value": "flashed",
+                "label": "Flashed"
+              },
+              {
+                "value": "zoom-flashed",
+                "label": "Zoom Flashed"
+              },
+              {
+                "value": "shadow-corner",
+                "label": "Shadow Corner"
+              },
+              {
+                "value": "zoom-shadow",
+                "label": "Zoom Shadow"
+              },
+              {
+                "value": "cup-border",
+                "label": "Cup Border"
+              },
+              {
+                "value": "flashed-zoom",
+                "label": "Flashed Zoom"
+              },
+              {
+                "value": "zoom-out-shadow",
+                "label": "Zoom Out Shadow"
+              },
+              {
+                "value": "mist",
+                "label": "Mist"
+              },
+              {
+                "value": "mist-text",
+                "label": "Mist Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "banner-with-content",
+        "name": "Image with content inside",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Common Settings"
+          },
+          {
+            "type": "header",
+            "content": "Images"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Action URL"
+          },
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Heading title</h2>\n<a href=\"#\">SHOP NOW</a>"
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Content Layout"
+          },
+          {
+            "type": "text",
+            "id": "content_width",
+            "label": "Width",
+            "info": "Optional. Enter value of pixel, percentage. Eg: 400px, 50%."
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "content_position",
+            "label": "Position",
+            "default": "middle-center",
+            "options": [
+              {
+                "value": "top-left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top-center",
+                "label": "Top Center"
+              },
+              {
+                "value": "top-right",
+                "label": "Top Right"
+              },
+              {
+                "value": "middle-left",
+                "label": "Middle Left"
+              },
+              {
+                "value": "middle-center",
+                "label": "Middle Center"
+              },
+              {
+                "value": "middle-right",
+                "label": "Middle Right"
+              },
+              {
+                "value": "bottom-left",
+                "label": "Bottom Left"
+              },
+              {
+                "value": "bottom-center",
+                "label": "Bottom Center"
+              },
+              {
+                "value": "bottom-right",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              },
+              {
+                "value": "custom-horizontal",
+                "label": "Custom horizontal, middle Vertical"
+              },
+              {
+                "value": "custom-vertical",
+                "label": "Custom vertical, center Horizontal"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Only applicable on *Custom* position"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_x_direction",
+            "label": "Horizontal alignment direction",
+            "default": "left-to-right",
+            "options": [
+              {
+                "value": "left-to-right",
+                "label": "Align from left"
+              },
+              {
+                "value": "right-to-left",
+                "label": "Align from right"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_x",
+            "label": "Horizontal alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_y_direction",
+            "label": "Vertical alignment direction",
+            "default": "top-to-bottom",
+            "options": [
+              {
+                "value": "top-to-bottom",
+                "label": "Align from top"
+              },
+              {
+                "value": "bottom-to-top",
+                "label": "Align from bottom"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_y",
+            "label": "Vertical alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "header",
+            "content": "Effect"
+          },
+          {
+            "type": "select",
+            "id": "hover_effect",
+            "label": "Hover effect",
+            "default": "none",
+            "options": [
+              {
+                "value": "none",
+                "label": "No effect"
+              },
+              {
+                "value": "zoom",
+                "label": "Zoom"
+              },
+              {
+                "value": "border-zoom",
+                "label": "Border Zoom"
+              },
+              {
+                "value": "flashed",
+                "label": "Flashed"
+              },
+              {
+                "value": "zoom-flashed",
+                "label": "Zoom Flashed"
+              },
+              {
+                "value": "shadow-corner",
+                "label": "Shadow Corner"
+              },
+              {
+                "value": "zoom-shadow",
+                "label": "Zoom Shadow"
+              },
+              {
+                "value": "cup-border",
+                "label": "Cup Border"
+              },
+              {
+                "value": "flashed-zoom",
+                "label": "Flashed Zoom"
+              },
+              {
+                "value": "zoom-out-shadow",
+                "label": "Zoom Out Shadow"
+              },
+              {
+                "value": "mist",
+                "label": "Mist"
+              },
+              {
+                "value": "mist-text",
+                "label": "Mist Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "Text content",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

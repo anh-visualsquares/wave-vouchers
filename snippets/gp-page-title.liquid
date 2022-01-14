@@ -1,0 +1,17 @@
+<div class="page-title-wrapper gp-page-title {% if template contains 'product' or template contains 'article' or template contains 'search' %}no-title{% endif %}" {% if settings.general_title_background_image != blank %}style="background-image: url({{ settings.general_title_background_image | img_url: 'master' }});"{% endif %}>
+  {% if template contains 'product' %}
+  {% elsif template == 'cart'  %}
+    <h1 class="page-title">{{ 'cart.general.title' | t }}</h1>
+  {% elsif template contains 'collection' and collection.handle %}
+    <h1 class="page-title">{{ collection.title }}</h1>
+  {% elsif template == 'blog' %}
+    <h1 class="page-title">{{ blog.title }}</h1>
+  {% elsif template == 'article' %}
+  {% elsif template contains 'page' %}
+    <h1 class="page-title">{{ page.title }}</h1>
+  {% elsif template contains 'search' %}
+  {% else %}
+    <h1 class="page-title">{{ page_title }}</h1>
+  {% endif %}
+  {% include 'breadcrumb' %}
+</div>

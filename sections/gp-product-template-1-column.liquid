@@ -1,0 +1,207 @@
+{% include 'gp-page-title' %}
+
+{% assign page_width = settings.product_page_width_1_column %}
+{% assign container_class = 'container' %}
+{% if page_width == 'fullwidth' %}
+  {% assign container_class = 'container-fluid' %}
+{% endif %}
+
+{% assign colClassMain = 'col-12' %}
+
+{% assign defaultTemplate = settings.product_page_default_template %}
+{% assign defaultZoom = settings.product_page_zoom %}
+{% assign staticContent = settings.product_page_cms_content %}
+{% assign relatedPosition = settings.product_page_related_position %}
+{% assign additionalTabTitle = settings.product_page_additional_tab_title %}
+{% assign additionalTabContent = settings.product_page_additional_tab_content %}
+
+{% if section.settings.use_settings %}
+  {% assign defaultTemplate = section.settings.default_template %}
+  {% assign defaultZoom = section.settings.zoom %}
+  {% assign staticContent = section.settings.cms_content %}
+  {% assign relatedPosition = section.settings.related_position %}
+  {% assign additionalTabTitle = section.settings.additional_tab_title %}
+  {% assign additionalTabContent = section.settings.additional_tab_content %}
+{% endif %}
+
+{% comment %}
+  Get first variant, or deep linked one
+{% endcomment %}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign compare_at_price = current_variant.compare_at_price -%}
+{%- assign price = current_variant.price -%}
+
+<div class="gp-product-detail gp-product-detail-1-column page-width-{{ page_width }} media-template-{{ defaultTemplate }}" id="ProductSection-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="product" data-enable-history-state="true">
+  {% if defaultTemplate == 'full-screen-multiple-slide' %}
+    {% include 'gp-product-media' %}
+  {% endif %}
+  <div class="{{ container_class }}">
+    <div class="row">
+      <div class="{{ colClassMain }}">
+        <div class="row">
+          {% unless defaultTemplate == 'full-screen-multiple-slide' %}
+            <div class="col-12 col-lg-6 gp-product-col-media">
+              {% include 'gp-product-media' %}
+            </div>
+          {% endunless %}
+          {% include 'gp-product-main-content' %}
+          {% include 'gp-product-tabs' %}
+          {% if relatedPosition == 'main-content' %}
+            {% include 'gp-product-related', class: 'main-related' %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Override default values of shop.strings for each template.
+  // Alternate product templates can change values of
+  // add to cart button, sold out, and unavailable states here.
+  theme.productStrings = {
+    addToCart: {{ 'products.product.add_to_cart' | t | json }},
+    soldOut: {{ 'products.product.sold_out' | t | json }},
+    unavailable: {{ 'products.product.unavailable' | t | json }}
+  }
+</script>
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "url": "{{ shop.url }}{{ product.url }}",
+  {%- if product.featured_image -%}
+    {%- assign image_size = product.featured_image.width | append: 'x' -%}
+    "image": [
+      "https:{{ product.featured_image.src | img_url: image_size }}"
+    ],
+  {%- endif -%}
+  "description": "{{ product.description | strip_html | escape }}",
+  {%- if current_variant.sku != blank -%}
+    "sku": "{{ current_variant.sku }}",
+  {%- endif -%}
+  "brand": {
+    "@type": "Thing",
+    "name": "{{ product.vendor | escape }}"
+  },
+  "offers": [
+    {%- for variant in product.variants -%}
+      {
+        "@type" : "Offer",
+        {%- if variant.sku != blank -%}
+          "sku": "{{ variant.sku }}",
+        {%- endif -%}
+        "availability" : "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+        "price" : "{{ variant.price | divided_by: 100.00 }}",
+        "priceCurrency" : "{{ cart.currency.iso_code }}",
+        "url" : "{{ shop.url }}{{ variant.url }}"
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{% schema %}
+{
+  "name": "1-column products",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This section contain settings for product page which used 1-column layout."
+    },
+    {
+      "type": "header",
+      "content": "Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_settings",
+      "label": "Use these values instead of default values",
+      "default": false,
+      "info": "By checking on it these settings below will override the settings on Theme Settings."
+    },
+    {
+      "type": "select",
+      "id": "default_template",
+      "label": "Default Template",
+      "default": "gallery-list",
+      "options": [
+        {
+          "value": "gallery-list",
+          "label": "Gallery list"
+        },
+        {
+          "value": "vertical-thumbnail",
+          "label": "Vertical thumbnail"
+        },
+        {
+          "value": "horizontal-thumbnail",
+          "label": "Horizontal thumbnail"
+        },
+        {
+          "value": "no-thumbnail",
+          "label": "No thumbnail"
+        },
+        {
+          "value": "full-screen-multiple-slide",
+          "label": "Full screen multiple slide"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "zoom",
+      "label": "Zoom",
+      "default": "no-zoom",
+      "options": [
+        {
+          "value": "no-zoom",
+          "label": "No zoom"
+        },
+        {
+          "value": "light-box",
+          "label": "Light box"
+        },
+        {
+          "value": "hover-zoom",
+          "label": "Hover zoom"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "cms_content",
+      "label": "Static content"
+    },
+    {
+      "type": "text",
+      "id": "additional_tab_title",
+      "label": "Additional tab title"
+    },
+    {
+      "type": "textarea",
+      "id": "additional_tab_content",
+      "label": "Additional tab content"
+    },
+    {
+      "type": "select",
+      "id": "related_position",
+      "label": "Related product position",
+      "default": "main-content",
+      "options": [
+        {
+          "value": "no-display",
+          "label": "No display"
+        },
+        {
+          "value": "main-content",
+          "label": "Main content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

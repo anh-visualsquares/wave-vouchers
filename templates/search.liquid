@@ -1,0 +1,83 @@
+{% assign view_mode = settings.search_page_view_mode %}
+{% assign product_per_row_desktop = settings.search_page_product_per_row_desktop %}
+{% assign product_per_row_tablet = settings.search_page_product_per_row_tablet %}
+{% assign product_per_row_mobile = settings.search_page_product_per_row_mobile %}
+{% assign row_per_page = settings.search_page_row_per_page %}
+{% assign limit = product_per_row_desktop | times: row_per_page %}
+
+{% include 'gp-page-title' %}
+<div class="search-template margin-top30">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        {% paginate search.results by limit %}
+
+        {% if search.performed == false %}
+          <div class="text-center">
+            <h2 class="margin-bottom20">{{ 'general.search.title' | t }}</h2>
+        {% else %}
+          <div class="section-header text-center">
+            <h2 class="margin-bottom20">
+              <span class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}:</span>
+              {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+            </h2>
+        {% endif %}
+            <div class="search-page-form">
+              <form action="/search" method="get" role="search" class="search">
+                <input type="hidden" name="type" value="product">
+                <div aria-live="polite" class="form-message form-message--error search-result-error-message hide" data-search-error-message>
+                  <ul id="error-search-form">
+                    <li>{{ 'general.search.empty_search_message' | t }}</li>
+                  </ul>
+                </div>
+
+                <div class="input-group">
+                  <input type="search"
+                    id="SearchInput"
+                    class="input-group__field search__input"
+                    name="q"
+                    value="{{ search.terms | escape }}"
+                    placeholder="{{ 'general.search.placeholder' | t }}"
+                    aria-label="{{ 'general.search.placeholder' | t }}"
+                    >
+                  <span class="input-group__btn">
+                    <button id="SearchResultSubmit" class="btn search__submit" type="submit">{{ 'general.search.submit' | t }}</button>
+                  </span>
+                </div>
+              </form>
+            </div>
+
+            {% if search.performed and search.results_count == 0 %}
+              <div class="rte margin-top30">
+                <p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
+              </div>
+            {% endif %}
+        </div>
+
+        {% if search.performed %}
+          <h2 class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}</h2>
+          <div class="gp-products view-mode-{{ view_mode }}">
+            <div class="gp-products-inner row-wrapper row {% if view_mode == 'list' %}row-1{% else %}row-{{ product_per_row_desktop }} row-tablet-{{ product_per_row_tablet }} row-mobile-{{ product_per_row_mobile }}{% endif %}">
+              {% for item in search.results %}
+                <div class="col">
+                  {% case view_mode %}
+                    {% when 'list' %}
+                      {% include 'gp-product-list', product: item %}
+                    {% else %}
+                      {% include 'gp-product-grid', product: item %}
+                  {% endcase %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% if paginate.pages > 1 %}
+            {% include 'gp-pagination-custom' %}
+          {% endif %}
+        {% endif %}
+
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+</div>

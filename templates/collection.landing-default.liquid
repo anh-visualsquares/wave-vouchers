@@ -1,0 +1,10 @@
+{% include 'gp-page-title' %}
+{% assign defaultTemplate = settings.collection_landing_layout %}
+{% case defaultTemplate %}
+  {% when 'masonry' %}
+    {% include 'gp-template-collection-landing-masonry' %}
+  {% when 'lookbook' %}
+    {% include 'gp-template-collection-landing-lookbook' %}
+  {% else %}
+    {% include 'gp-template-collection-landing-grid' %}    
+{% endcase %}

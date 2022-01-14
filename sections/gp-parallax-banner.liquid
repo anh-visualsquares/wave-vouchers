@@ -1,0 +1,256 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="banner-section" class="gp-section-wrapper">
+  <div class="gp-banners gp-parallax-banners gp-section-inner">
+    <div class="row">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          <div class="col-12" {{ block.shopify_attributes }}>
+            {% include 'gp-banner-with-text-html', isParallax: true %}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "GPS Parallax Banner",
+    "class": "index-section",
+    "settings": [
+      {
+        "type": "header",
+				"content": "Common settings"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "banner-with-content",
+        "name": "Image with content inside",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Image"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "Image (mobile)"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Action URL"
+          },
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Heading title</h2>\n<a href=\"#\">SHOP NOW</a>"
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Content Layout"
+          },
+          {
+            "type": "text",
+            "id": "content_width",
+            "label": "Width",
+            "info": "Optional. Enter value of pixel, percentage. Eg: 400px, 50%."
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "content_position",
+            "label": "Position",
+            "default": "middle-center",
+            "options": [
+              {
+                "value": "top-left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top-center",
+                "label": "Top Center"
+              },
+              {
+                "value": "top-right",
+                "label": "Top Right"
+              },
+              {
+                "value": "middle-left",
+                "label": "Middle Left"
+              },
+              {
+                "value": "middle-center",
+                "label": "Middle Center"
+              },
+              {
+                "value": "middle-right",
+                "label": "Middle Right"
+              },
+              {
+                "value": "bottom-left",
+                "label": "Bottom Left"
+              },
+              {
+                "value": "bottom-center",
+                "label": "Bottom Center"
+              },
+              {
+                "value": "bottom-right",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              },
+              {
+                "value": "custom-horizontal",
+                "label": "Custom horizontal, middle Vertical"
+              },
+              {
+                "value": "custom-vertical",
+                "label": "Custom vertical, center Horizontal"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Only applicable on *Custom* position"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_x_direction",
+            "label": "Horizontal alignment direction",
+            "default": "left-to-right",
+            "options": [
+              {
+                "value": "left-to-right",
+                "label": "Align from left"
+              },
+              {
+                "value": "right-to-left",
+                "label": "Align from right"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_x",
+            "label": "Horizontal alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_y_direction",
+            "label": "Vertical alignment direction",
+            "default": "top-to-bottom",
+            "options": [
+              {
+                "value": "top-to-bottom",
+                "label": "Align from top"
+              },
+              {
+                "value": "bottom-to-top",
+                "label": "Align from bottom"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_y",
+            "label": "Vertical alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "GPS Parallax Banner",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "banner-with-content"
+        }
+      ]
+    }]
+  }
+{% endschema %}

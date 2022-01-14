@@ -1,0 +1,362 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="gp-logo-list-section" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-logo-list gp-section-inner">
+    <div class="row">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'heading' %}
+            {% include 'gp-block-heading' %}
+          {% endif %}
+        {% endfor %}
+        <div class="col-12">
+          <div class="logo-slider" data-item-desktop="{{ section.settings.logo_per_slide_desktop }}" data-item-tablet="{{ section.settings.logo_per_slide_tablet }}" data-item-mobile="{{ section.settings.logo_per_slide_mobile }}">
+            {% for block in section.blocks %}
+              {% if block.type == 'logo' %}
+                <div class="logo-item">
+                  {% if block.settings.image != blank %}
+                    {% if block.settings.url != blank %}
+                      <a href="{{ block.settings.url }}"><img src="{{ block.settings.image | img_url: 'master' }}" alt="" /></a>
+                    {% else %}
+                      <img src="{{ block.settings.image | img_url: 'master' }}" alt="" />
+                    {% endif %}
+                  {% else %}
+                    {% capture current %}{% cycle 1, 2, 3, 4, 5 %}{% endcapture %}
+                    {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "GPS Logo list",
+    "class": "index-section",
+    "settings": [
+      {
+				"type": "header",
+				"content": "Specific settings"
+			},
+      {
+        "type": "range",
+        "id": "logo_per_slide_desktop",
+        "label": "Number of logo per slide (desktop)",
+        "default": 6,
+        "min": 1,
+        "max": 10,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "logo_per_slide_tablet",
+        "label": "Number of logo per slide (tablet)",
+        "default": 4,
+        "min": 1,
+        "max": 10,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "logo_per_slide_mobile",
+        "label": "Number of logo per slide (mobile)",
+        "default": 2,
+        "min": 1,
+        "max": 10,
+        "step": 1
+      },
+      {
+				"type": "header",
+				"content": "Common settings"
+			},
+      {
+        "type": "checkbox",
+        "id": "fullwidth",
+        "label": "Fullwidth",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "checkbox",
+        "id": "background_cover",
+        "label": "Background cover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "background_parallax",
+        "label": "Background parallax",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "background_repeat",
+        "label": "Background repeat",
+        "default": "no-repeat",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "Repeat"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Repeat-x"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Repeat-y"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_x",
+        "label": "Background position(x)",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_y",
+        "label": "Background position(y)",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "header",
+				"content": "Padding & Margin"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_left",
+        "label": "Padding left",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_right",
+        "label": "Padding right",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading content",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Our Brand</h2>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Margin"
+          },
+          {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 30
+          }
+        ]
+      },
+      {
+        "type": "logo",
+        "name": "Logo",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "URL"
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "GPS Logo list",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        }
+      ]
+    }]
+  }
+{% endschema %}

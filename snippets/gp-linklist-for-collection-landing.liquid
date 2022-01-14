@@ -1,0 +1,55 @@
+{% assign currentLinklist = '' %}
+{% if settings.collection_landing_navigation != blank %}
+  {% if linklists[settings.collection_landing_navigation] and linklists[settings.collection_landing_navigation].links.size > 0 %}
+    {% for link in linklists[settings.collection_landing_navigation].links %}
+      {% assign handle_level_1 = link.handle %}
+      {% if linklists[handle_level_1] and linklists[handle_level_1].links.size > 0 %}
+        {% if link.url == collection.url %}
+          {% assign currentLinklist = linklists[handle_level_1] %}
+          {% break %}
+        {% else %}
+          {% for link2 in linklists[handle_level_1].links %}
+            {% assign handle_level_2 = link2.handle %}
+            {% if linklists[handle_level_2] and linklists[handle_level_2].links.size > 0 %}
+              {% if link2.url == collection.url %}
+                {% assign currentLinklist = linklists[handle_level_2] %}
+                {% break %}
+              {% else %}
+                {% for link3 in linklists[handle_level_2].links %}
+                  {% assign handle_level_3 = link3.handle %}
+                  {% if linklists[handle_level_3] and linklists[handle_level_3].links.size > 0 %}
+                    {% if link3.url == collection.url %}
+                      {% assign currentLinklist = linklists[handle_level_3] %}
+                      {% break %}
+                    {% else %}
+                      {% for link4 in linklists[handle_level_3].links %}
+                        {% assign handle_level_4 = link4.handle %}
+                        {% if linklists[handle_level_4] and linklists[handle_level_4].links.size > 0 %}
+                          {% if link4.url == collection.url %}
+                            {% assign currentLinklist = linklists[handle_level_4] %}
+                            {% break %}
+                          {% else %}
+                            {% break %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if currentLinklist != '' %}
+                        {% break %}
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                {% if currentLinklist != '' %}
+                  {% break %}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if currentLinklist != '' %}
+            {% break %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endif %}

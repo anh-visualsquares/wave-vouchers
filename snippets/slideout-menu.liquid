@@ -1,0 +1,37 @@
+<div class="slideout-menu">
+  <ul class="slm-tab-title">
+    <li class="tab-title item-megamenu"><a class="active" href="#mobile_navigation_menu">{{ 'general.header.menu' | t }}</a></li>
+    {% if customer_accounts_enabled %}
+      <li class="tab-title item-my-account"><a href="#mobile_navigation_account">{{ 'general.header.account' | t }}</a></li>
+    {% endif %}
+    {% if enable_currency or custom_content or enable_newsletter or enable_socials %}
+      <li class="tab-title item-setting"><a href="#mobile_navigation_setting">{{ 'general.header.setting' | t }}</a></li>
+    {% endif %}
+  </ul>
+  <div class="slm-tab-content">
+    <div id="mobile_navigation_menu" class="tab-content active">
+      {% include 'megamenu' %}
+    </div>
+    {% if customer_accounts_enabled %}
+      <div id="mobile_navigation_account" class="tab-content">
+        {% include 'header-my-account' %}
+      </div>
+    {% endif %}
+    {% if enable_currency or custom_content or enable_newsletter or enable_socials %}
+      <div id="mobile_navigation_setting" class="tab-content">
+        {% if enable_currency %}
+          {% include 'currency-picker' %}
+        {% endif %}
+        {% if enable_newsletter %}
+          {% include 'header-newsletter' %}
+        {% endif %}
+        {% if custom_content %}
+          {% include 'header-custom-content' %}
+        {% endif %}
+        {% if enable_socials %}
+          {% include 'header-socials' %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

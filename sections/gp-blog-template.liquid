@@ -1,0 +1,89 @@
+
+{% assign articles_per_row = section.settings.articles_per_row %}
+{% assign row_per_page = section.settings.row_per_page %}
+{% assign articles_per_page = articles_per_row | times: row_per_page %}
+
+{% assign col = 12 | divided_by: articles_per_row %}
+{% assign colClass = 'col-12 col-lg-' | append: col %}
+{% if articles_per_row > 2 %}
+  {% assign colClass = colClass | append: ' col-md-6' %}
+{% else %}
+  {% assign colClass = colClass | append: ' col-md-' | append: col %}
+{% endif %}
+
+{% include 'gp-page-title' %}
+<div class="blog-template margin-top30">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        {% paginate blog.articles by articles_per_page %}
+          <div class="row">
+            {% for article in blog.articles %}
+              <div class="{{ colClass }} item-blog">
+                <div class="blog-item-wrapper">
+                  <div class="img-blog">
+                    <a href="{{ article.url }}" {% if article.image %}style="background-image: url({{ article.image | img_url: 'master' }});"{% endif %}>
+                      {% if article.image %}
+                        <img src="{{ article.image | img_url: 'master' }}" alt="">
+                      {% endif %}
+                    </a>
+                  </div>
+                  <div class="text_blog{% if article.image == blank %} show-border {% endif %}">
+                    <h5><a href="{{ article.url }}">{{ article.title | strip_html | truncate: 50 , ' ' }}</a></h5>
+                    <div class="time-blog">
+                      <span class="date"><i class="ion-android-calendar"></i> {{ article.published_at | time_tag: '%d %b, %Y' }}</span>
+                      <span class="comment-count"><i class="ion-chatbubble-working"></i> {{ article.comments_count }}
+                        {% if article.comments_count <= 1 %}
+                          {{ 'blogs.article.comment' | t }}
+                        {% else %}
+                          {{ 'blogs.article.comments' | t }}
+                        {% endif %}
+                      </span>
+                    </div>
+                    <div class="blog-short-desc">
+                      {% if article.excerpt != blank %}
+                        {{ article.excerpt }}
+                      {% else %}
+                        {{ article.content | strip_html | truncate: 120 , ' ' }}
+                      {% endif %}
+                    </div>
+                    <div class="read-more-text">
+                      <a href="{{ article.url }}" class="read-more-blog">{{ 'blogs.article.read_more' | t }}</a>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            {% endfor %} 
+          </div>
+          {% include 'gp-pagination-custom' %}
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Blog landing",
+    "settings": [
+      {
+        "type": "range",
+        "id": "articles_per_row",
+        "label": "Articles per row",
+        "min": 1,
+        "max": 4,
+        "default": 3,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "row_per_page",
+        "label": "Row per page",
+        "min": 1,
+        "max": 10,
+        "default": 4,
+        "step": 1
+      }
+    ]
+  }
+{% endschema %}

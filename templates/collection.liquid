@@ -1,0 +1,168 @@
+{% comment %} DEFAULT COLLECTION TEMPLATE {% endcomment %}
+{% include 'gp-page-title' %}
+
+{% case settings.collection_page_layout %}
+  {% when '1-column' %}
+    {% assign page_width = settings.collection_page_width_1_column %}
+    {% assign container_class = 'container' %}
+    {% if page_width == 'fullwidth' %}
+      {% assign container_class = 'container-fluid' %}
+    {% endif %}
+
+    {% assign view_mode = settings.collection_page_view_mode %}
+    {% assign colClassMain = 'col-12' %}
+
+    <div class="gp-collection gp-collection-1-column page-width-{{ page_width }}">
+      <div class="{{ container_class }}">
+        <div class="row">
+          {% if collection.description != blank and settings.collection_page_description_position == 'above-products' %}
+            <div class="gp-collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+
+          <div class="collection-top-filter {% if collection.products_count == 0 %}hidden{% endif %} col-12">
+            <div class="collection-top-filter-inner">
+              <div class="product-count">
+                {% capture count_html %}
+                  <span>{{ 'collections.general.items_with_count' | t: count: collection.products_count }}</span>
+                {% endcapture %}
+                {{ 'collections.general.items_with_count_html' | t: count_html: count_html }}
+              </div>
+              <a href="#" class="filter-title js-toggle-filter"><span>{{ 'collections.filters.title_tags' | t }}</span><span class="ti-panel toggle-icon"></span></a>
+              {% if view_mode == 'grid-list' or view_mode == 'list-grid' %}
+                <div class="gp-view-mode">
+                  <a class="gp-view-mode-item gp-view-mode-grid {% if view_mode == 'grid-list' %}active{% endif %}" title="Grid" href="#" data-value="grid">
+                    <span>{{ 'collections.general.grid' | t }}</span>
+                  </a>
+                  <a class="gp-view-mode-item gp-view-mode-list {% if view_mode == 'list-grid' %}active{% endif %}" title="List" href="#" data-value="list">
+                    <span>{{ 'collections.general.list' | t }}</span>
+                  </a>
+                </div>
+              {% endif %}
+              {% section 'gp-collection-filter' %}
+            </div>
+          </div>
+          
+          <div class="gp-products view-mode-{{ view_mode }} {{ colClassMain }} {% if view_mode == 'grid-list' %}viewing-grid{% endif %} {% if view_mode == 'list-grid' %}viewing-list{% endif %}">
+            {% section 'gp-collection-1-column' %}
+          </div>
+
+          {% if collection.description != blank and settings.collection_page_description_position == 'below-products' %}
+            <div class="rte collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% when '2-columns-left' %}
+    {% assign page_width = settings.collection_page_width_2_columns_left %}
+    {% assign container_class = 'container' %}
+    {% if page_width == 'fullwidth' %}
+      {% assign container_class = 'container-fluid' %}
+    {% endif %}
+
+    {% assign view_mode = settings.collection_page_view_mode %}
+    {% assign colClassMain = 'col-12 col-md-9' %}
+
+    <div class="gp-collection gp-collection-2-columns-left page-width-{{ page_width }}">
+      <div class="{{ container_class }}">
+        <div class="row">
+          {% if collection.description != blank and settings.collection_page_description_position == 'above-products' %}
+            <div class="gp-collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+
+          <div class="collection-sidebar-filter collection-sidebar-filter-left col-3 {% if collection.products_count == 0 %}hidden{% endif %}">
+            {% section 'gp-collection-filter' %}
+          </div>
+
+          <div class="gp-products view-mode-{{ view_mode }} {{ colClassMain }} {% if view_mode == 'grid-list' %}viewing-grid{% endif %} {% if view_mode == 'list-grid' %}viewing-list{% endif %}">
+            {% section 'gp-collection-2-columns-left' %}
+          </div>
+
+          {% if collection.description != blank and settings.collection_page_description_position == 'below-products' %}
+            <div class="rte collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% when '2-columns-right' %}
+    {% assign page_width = settings.collection_page_width_2_columns_right %}
+    {% assign container_class = 'container' %}
+    {% if page_width == 'fullwidth' %}
+      {% assign container_class = 'container-fluid' %}
+    {% endif %}
+
+    {% assign view_mode = settings.collection_page_view_mode %}
+    {% assign colClassMain = 'col-12 col-md-9' %}
+
+    <div class="gp-collection gp-collection-2-columns-right page-width-{{ page_width }}">
+      <div class="{{ container_class }}">
+        <div class="row">
+          {% if collection.description != blank and settings.collection_page_description_position == 'above-products' %}
+            <div class="gp-collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+
+          <div class="gp-products view-mode-{{ view_mode }} {{ colClassMain }} {% if view_mode == 'grid-list' %}viewing-grid{% endif %} {% if view_mode == 'list-grid' %}viewing-list{% endif %}">
+            {% section 'gp-collection-2-columns-right' %}
+          </div>
+
+          <div class="collection-sidebar-filter collection-sidebar-filter-right col-3 {% if collection.products_count == 0 %}hidden{% endif %}">
+            {% section 'gp-collection-filter' %}
+          </div>
+
+          {% if collection.description != blank and settings.collection_page_description_position == 'below-products' %}
+            <div class="rte collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% when '3-columns' %}
+    {% assign page_width = settings.collection_page_width_3_columns %}
+    {% assign container_class = 'container' %}
+    {% if page_width == 'fullwidth' %}
+      {% assign container_class = 'container-fluid' %}
+    {% endif %}
+
+    {% assign view_mode = settings.collection_page_view_mode %}
+    {% assign colClassMain = 'col-12 col-md-9 col-lg-6' %}
+
+    <div class="gp-collection gp-collection-3-columns page-width-{{ page_width }}">
+      <div class="{{ container_class }}">
+        <div class="row">
+          {% if collection.description != blank and settings.collection_page_description_position == 'above-products' %}
+            <div class="gp-collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+
+          <div class="collection-sidebar-filter collection-sidebar-filter-left col-3">
+            {% section 'gp-collection-filter' %}
+          </div>
+
+          <div class="gp-products view-mode-{{ view_mode }} {{ colClassMain }} {% if view_mode == 'grid-list' %}viewing-grid{% endif %} {% if view_mode == 'list-grid' %}viewing-list{% endif %}">
+            {% section 'gp-collection-3-columns' %}
+          </div>
+
+          <div class="collection-sidebar-filter collection-sidebar-filter-right col-3 big-desktop-only">
+            {% section 'gp-collection-widget' %}
+          </div>
+
+          {% if collection.description != blank and settings.collection_page_description_position == 'below-products' %}
+            <div class="rte collection-description col-12">
+              {{ collection.description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+{% endcase %}

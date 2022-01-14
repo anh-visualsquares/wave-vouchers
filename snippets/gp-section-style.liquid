@@ -1,0 +1,62 @@
+<style>
+  [data-section-id="{{ section.id }}"] {
+    {% if section.settings.margin_top > 0 %}
+      margin-top: {{ section.settings.margin_top }}px;
+    {% endif %}
+    {% if section.settings.margin_bottom > 0 %}
+      margin-bottom: {{ section.settings.margin_bottom }}px;
+    {% endif %}
+    {% if section.settings.padding_top > 0 %}
+      padding-top: {{ section.settings.padding_top }}px;
+    {% endif %}
+    {% if section.settings.padding_bottom > 0 %}
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    {% endif %}
+    {% if section.settings.padding_left > 0 %}
+      padding-left: {{ section.settings.padding_left }}px;
+    {% endif %}
+    {% if section.settings.padding_right > 0 %}
+      padding-right: {{ section.settings.padding_right }}px;
+    {% endif %}
+    {% unless no_bg %}
+      {% if section.settings.background_image != blank %}
+        background-image: url({{ section.settings.background_image | img_url: 'master' }});
+      {% endif %}
+      {% if section.settings.background_color != blank %}
+        background-color: {{ section.settings.background_color }};
+      {% endif %}
+      {% if section.settings.background_cover %}
+        background-size: cover;
+      {% else %}
+        background-size: auto;
+      {% endif %}
+      background-repeat: {{ section.settings.background_repeat }};
+      background-position: {{ section.settings.background_pos_x }} {{ section.settings.background_pos_y }};
+      {% if section.settings.background_parallax %}
+        background-attachment: fixed;
+      {% endif %}
+    {% endunless %}
+  }
+  @media (max-width: 1199px) {
+    [data-section-id="{{ section.id }}"] {
+      {% if section.settings.padding_left > 0 %}
+        padding-left: 15px;
+      {% endif %}
+      {% if section.settings.padding_right > 0 %}
+        padding-right: 15px;
+      {% endif %}
+      {% if section.settings.padding_top > 0 %}
+        padding-top: 30px;
+      {% endif %}
+      {% if section.settings.padding_bottom > 0 %}
+        padding-bottom: 30px;
+      {% endif %}
+      {% if section.settings.margin_top > 30 %}
+        margin-top: 30px;
+      {% endif %}
+      {% if section.settings.margin_bottom > 30 %}
+        margin-bottom: 30px;
+      {% endif %}
+    }
+  }
+</style>

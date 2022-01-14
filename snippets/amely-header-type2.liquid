@@ -1,0 +1,43 @@
+<div class="mobile-navigation">
+  {% include 'slideout-menu' %}
+</div>
+<div class="desktop-additional-menu">
+  {% if customer_accounts_enabled %}
+    <h5 class="title">{{ 'general.header.my_account' | t }}</h5>
+    {% include 'header-my-account' %}
+  {% endif %}
+  {% if enable_currency %}
+    <h5 class="title">{{ 'general.header.currency' | t }}</h5>
+    {% include 'currency-picker' %}
+  {% endif %}
+  {% if custom_content %}
+    {% include 'header-custom-content' %}
+  {% endif %}
+  {% if enable_newsletter %}
+    {% include 'header-newsletter' %}
+  {% endif %}
+  {% if enable_socials %}
+    <h5 class="title">{{ 'general.header.follow_us' | t }}</h5>
+    {% include 'header-socials' %}
+  {% endif %}
+</div>
+<div class="middle-header-content" {% if settings.header_middle_background_image != blank %}style="background-image: url({{ settings.header_middle_background_image | img_url: 'master' }})"{% endif %}>
+  <div class="container-fluid">
+    <div class="middle-header-wrapper">
+      <div class="toggle-desktop-additional-menu desktop-only">
+        <span class="ti-menu"></span>
+      </div>
+      {% include 'header-logo' %}
+
+      <div class="nav-megamenu" id="AccessibleNav" role="navigation">
+        {% include 'megamenu' %}
+      </div>
+
+      <div class="child-content">
+        <div class="toggle_menu_mobile"><span class="ti-menu"></span></div>
+        {% include 'header-cart' %}
+        {% include 'header-search' %}
+      </div>
+    </div>
+  </div>
+</div>

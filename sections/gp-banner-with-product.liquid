@@ -1,0 +1,527 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="banner-section" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-banners gp-banner-product gp-section-inner">
+    <div class="row margin0">
+      {% if section.blocks.size > 0 %}
+        {% assign hasBanner = false %}
+        {% for block in section.blocks %}
+          {% if block.type == 'banner-with-content' %}
+            {% assign hasBanner = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'product' %}
+              <div class="col-md-{{ block.settings.columns }} col-12 padding0" {{ block.shopify_attributes }}>
+                <div class="product-item {% if hasBanner %}follow-banner-height{% endif %}">
+                  {% assign productItem = all_products[block.settings.product] %}
+                  <div class="hover-layer"><a href="{{ productItem.url }}">{{ 'sections.products.shop_now' | t }}</a></div>
+                  {% if block.settings.product != blank %}  
+                    <div class="product-image">
+                      <a href="{{ productItem.url }}" title="" {% if hasBanner %}style="background-image: url({{ productItem.featured_image | img_url: 'master' }})"{% endif %}>
+                        <img src="{{ productItem.featured_image | img_url: 'master' }}" alt=""/>
+                      </a>
+                    </div>
+                    <div class="product-information">
+                      <a href="{{ productItem.url }}" title="" class="product-name">
+                        {{ productItem.title }}
+                      </a>
+                      {% include 'product-price' with product: productItem %}
+                    </div>
+                  {% else %}
+                    <div class="product-image">
+                      <a href="#" title="" style="background:#eee;">
+                        
+                      </a>
+                    </div>
+                    <div class="product-information">
+                      <a href="#" title="" class="product-name">
+                        Product Name
+                      </a>
+                      {% include 'product-price' with product: productItem %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% when 'banner-with-content' %}
+              <div class="col-md-{{ block.settings.columns }} col-12 padding0" {{ block.shopify_attributes }}>
+                {% include 'gp-banner-with-text-html' %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "GPS Product & Banner",
+    "class": "index-section",
+    "settings": [
+      {
+				"type": "header",
+				"content": "Common settings"
+			},
+      {
+        "type": "checkbox",
+        "id": "fullwidth",
+        "label": "Fullwidth",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "checkbox",
+        "id": "background_cover",
+        "label": "Background cover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "background_parallax",
+        "label": "Background parallax",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "background_repeat",
+        "label": "Background repeat",
+        "default": "no-repeat",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "Repeat"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Repeat-x"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Repeat-y"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_x",
+        "label": "Background position(x)",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_y",
+        "label": "Background position(y)",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "header",
+				"content": "Padding & Margin"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_left",
+        "label": "Padding left",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_right",
+        "label": "Padding right",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "product",
+        "name": "Product",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          },
+          {
+            "type": "header",
+            "content": "Common Settings"
+          },
+          {
+            "type": "range",
+            "id": "columns",
+            "label": "Columns",
+            "default": 4,
+            "min": 1,
+            "max": 12
+          }
+        ]
+      },
+      {
+        "type": "banner-with-content",
+        "name": "Image with content inside",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Common Settings"
+          },
+          {
+            "type": "range",
+            "id": "columns",
+            "label": "Columns",
+            "default": 8,
+            "min": 1,
+            "max": 12
+          },
+          {
+            "type": "header",
+            "content": "Images"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Action URL"
+          },
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Heading title</h2>\n<a href=\"#\">SHOP NOW</a>"
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Content Layout"
+          },
+          {
+            "type": "text",
+            "id": "content_width",
+            "label": "Width",
+            "info": "Optional. Enter value of pixel, percentage. Eg: 400px, 50%."
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "content_position",
+            "label": "Position",
+            "default": "middle-center",
+            "options": [
+              {
+                "value": "top-left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top-center",
+                "label": "Top Center"
+              },
+              {
+                "value": "top-right",
+                "label": "Top Right"
+              },
+              {
+                "value": "middle-left",
+                "label": "Middle Left"
+              },
+              {
+                "value": "middle-center",
+                "label": "Middle Center"
+              },
+              {
+                "value": "middle-right",
+                "label": "Middle Right"
+              },
+              {
+                "value": "bottom-left",
+                "label": "Bottom Left"
+              },
+              {
+                "value": "bottom-center",
+                "label": "Bottom Center"
+              },
+              {
+                "value": "bottom-right",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              },
+              {
+                "value": "custom-horizontal",
+                "label": "Custom horizontal, middle Vertical"
+              },
+              {
+                "value": "custom-vertical",
+                "label": "Custom vertical, center Horizontal"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Only applicable on *Custom* position"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_x_direction",
+            "label": "Horizontal alignment direction",
+            "default": "left-to-right",
+            "options": [
+              {
+                "value": "left-to-right",
+                "label": "Align from left"
+              },
+              {
+                "value": "right-to-left",
+                "label": "Align from right"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_x",
+            "label": "Horizontal alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_y_direction",
+            "label": "Vertical alignment direction",
+            "default": "top-to-bottom",
+            "options": [
+              {
+                "value": "top-to-bottom",
+                "label": "Align from top"
+              },
+              {
+                "value": "bottom-to-top",
+                "label": "Align from bottom"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_y",
+            "label": "Vertical alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "header",
+            "content": "Effect"
+          },
+          {
+            "type": "select",
+            "id": "hover_effect",
+            "label": "Hover effect",
+            "default": "none",
+            "options": [
+              {
+                "value": "none",
+                "label": "No effect"
+              },
+              {
+                "value": "zoom",
+                "label": "Zoom"
+              },
+              {
+                "value": "border-zoom",
+                "label": "Border Zoom"
+              },
+              {
+                "value": "flashed",
+                "label": "Flashed"
+              },
+              {
+                "value": "zoom-flashed",
+                "label": "Zoom Flashed"
+              },
+              {
+                "value": "shadow-corner",
+                "label": "Shadow Corner"
+              },
+              {
+                "value": "zoom-shadow",
+                "label": "Zoom Shadow"
+              },
+              {
+                "value": "cup-border",
+                "label": "Cup Border"
+              },
+              {
+                "value": "flashed-zoom",
+                "label": "Flashed Zoom"
+              },
+              {
+                "value": "zoom-out-shadow",
+                "label": "Zoom Out Shadow"
+              },
+              {
+                "value": "mist",
+                "label": "Mist"
+              },
+              {
+                "value": "mist-text",
+                "label": "Mist Text"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "GPS Product & Banner",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "banner-with-content"
+        }
+      ]
+    }]
+  }
+{% endschema %}

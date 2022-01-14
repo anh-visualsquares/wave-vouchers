@@ -1,0 +1,6 @@
+development:
+  password: shptka_746242751e84052b8e9326e4d7c9501a
+  theme_id: "128164331675"
+  store: wave-vouchers-dev.myshopify.com
+  ignore_files:
+  - settings_data.json

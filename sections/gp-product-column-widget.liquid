@@ -1,0 +1,404 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="gp-product-column" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-product-column-widget gp-section-inner">
+    <div class="row">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'featured_collection' %}
+              {% assign product_limit = block.settings.product_limit %}
+              {% assign product_layout = block.settings.product_layout %}
+              {% assign product_per_row = block.settings.product_per_row %}
+              <div class="col-lg-{{ block.settings.columns }} col-12">
+                <div class="product-column margin-bottom20">
+                  <div class="column-title">
+                    {% if block.settings.title != blank %}
+                      <h5>{{ block.settings.title }}</h5>
+                    {% else %}
+                      {% if block.settings.collection != blank %}
+                        <h4>{{ collections[block.settings.collection].title }}</h4>
+                      {% else %}
+                        <h4>Column {{ forloop.index }}</h4>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                  <div class="row row-wrapper row-{{ product_per_row }} row-tablet-1 {% if block.settings.product_layout == 'grid' %}row-mobile-2{% else %}row-mobile-1{% endif %}">
+                    {% if block.settings.collection != blank %}
+                      {%- assign collection = collections[block.settings.collection] -%} 
+                      {% for product in collection.products limit: product_limit %}
+                        <div class="col">
+                          {% if block.settings.product_layout == 'grid' %}
+                            {% include 'gp-product-grid' %}
+                          {% else %}
+                            {% include 'gp-product-list', hideDescription: true, hideReview: true, customClass: 'minimized show-wishlist show-label' %}
+                          {% endif %}
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                      {% for i in (1..product_limit) %}
+                        <div class="col">
+                          {% include 'gp-product-demo-html' %}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              {% include 'gp-block-heading' %}
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "GPS Product column widget",
+    "class": "index-section",
+    "settings": [
+      {
+				"type": "header",
+				"content": "Common settings"
+			},
+      {
+        "type": "checkbox",
+        "id": "fullwidth",
+        "label": "Fullwidth",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "checkbox",
+        "id": "background_cover",
+        "label": "Background cover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "background_parallax",
+        "label": "Background parallax",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "background_repeat",
+        "label": "Background repeat",
+        "default": "no-repeat",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "Repeat"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Repeat-x"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Repeat-y"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_x",
+        "label": "Background position(x)",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_y",
+        "label": "Background position(y)",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "header",
+				"content": "Padding & Margin"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_left",
+        "label": "Padding left",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_right",
+        "label": "Padding right",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading content",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Heading title</h2>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Margin"
+          },
+          {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 30
+          }
+        ]
+      },
+      {
+        "type": "featured_collection",
+        "name": "Products",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "info": "Leave blank to use collection title as tab's title"
+          },
+          {
+            "type":"collection",
+            "id":"collection",
+            "label":"Collection"
+          },
+          {
+            "type": "range",
+            "id": "columns",
+            "label": "Columns (Width)",
+            "default": 4,
+            "min": 1,
+            "max": 12
+          },
+          {
+            "type": "select",
+            "id": "product_layout",
+            "label": "Product layout",
+            "default": "list",
+            "options": [
+              {
+                "value": "grid",
+                "label": "Bottom details"
+              },
+              {
+                "value": "list",
+                "label": "Right-side details"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "product_per_row",
+            "label": "Products per row",
+            "default": "1",
+            "options": [
+              {
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "value": "3",
+                "label": "3"
+              },
+              {
+                "value": "4",
+                "label": "4"
+              },
+              {
+                "value": "5",
+                "label": "5"
+              }
+            ]
+          },
+          {
+            "type":"range",
+            "id":"product_limit",
+            "label":"Product limit",
+            "default": 2,
+            "min": 1,
+            "max": 30,
+            "step": 1
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "GPS Product columns widget",
+        "category": "Product",
+        "blocks": [
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

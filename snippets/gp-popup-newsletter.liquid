@@ -1,0 +1,111 @@
+{% if settings.newsletter_popup_enable %}
+  <div class="gp-popup newsletter-popup {% if settings.newsletter_popup_enable_test_mode %}test-mode{% endif %} {% if settings.newsletter_popup_display_on_mobile %}show-on-mobile{% endif %}" id="newsletter-popup" style="width: {% if settings.newsletter_popup_width != blank %}{{ settings.newsletter_popup_width }}px{% else %}500px{% endif %}; {% if settings.newsletter_popup_mobile_background_image != blank %}background-image: url({{ settings.newsletter_popup_mobile_background_image | img_url: 'master' }});{% endif %}">
+    <div class="newsletter-popup-inner {% if settings.newsletter_popup_mobile_background_image != blank %}has-mobile-banner{% endif %}" style="{% if settings.newsletter_popup_background_image != blank %}background-image: url({{ settings.newsletter_popup_background_image | img_url: 'master' }});{% endif %}">
+      <div class="block-popup-subscribe">
+        <div class="block-popup-top">
+          <div class="block-popup-content">
+            {% if settings.newsletter_popup_content != blank %}
+              <div class="block-popup-title">
+                {{ settings.newsletter_popup_content }}
+              </div>
+            {% endif %}
+
+            <div class="newsletter-popup-form inline-newsletter">
+              <div class="block newsletter">
+                <div class="content">
+                  {% form 'customer', id: 'popup-newsletter' %}
+                    <div class="input-group password__input-group">
+                      <input type="hidden" name="contact[tags]" value="newsletter">
+                      <input type="email"
+                        name="contact[email]"
+                        id="popup-email"
+                        class="input-group__field newsletter__input input-large email-input"
+                        value="{% if customer %}{{ customer.email }}{% endif %}"
+                        placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                        autocapitalize="off" required>
+                      <span class="input-group__btn">
+                        <button type="submit" class="btn newsletter__submit" name="commit">{{ 'general.newsletter_form.submit' | t }}</button>
+                      </span>
+                    </div>
+                  {% endform %}
+                </div>
+              </div>
+            </div>
+            <div class="checkbox field choice dont-show">
+              <input id="dont_show" type="checkbox">
+              <label for="dont_show">{{ 'general.newsletter_form.dont_show' | t }}</label>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function initPopupNewsletter() {
+      $(window).load(function () {
+        setTimeout(function() {
+          if ($('#newsletter-popup').hasClass('test-mode')) {
+            $.magnificPopup.open({
+              items: {
+                src: '#newsletter-popup' 
+              },
+              type: 'inline',
+              mainClass: 'modal_newsletter_popup mfp-fade',
+              removalDelay: 300
+            });
+          } else {
+            if(getCookie('newsletterpopup') != 'nevershow'){
+              $.magnificPopup.open({
+                items: {
+                  src: '#newsletter-popup' 
+                },
+                type: 'inline',
+                mainClass: 'modal_newsletter_popup mfp-fade',
+                removalDelay: 300
+              });
+            }
+          }
+        }, {{ settings.newsletter_popup_delay_time | times: 1000 }});
+      });
+
+      $('#newsletter-popup #dont_show').click(function() {
+        dontShowPopup('dont_show');
+      });
+    }
+
+    function getCookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+      }
+      return "";
+    }
+
+    function dontShowPopup(el) {
+      if($('#'+el).prop('checked')) {
+        var d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000*30));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = 'newsletterpopup' + "=" + 'nevershow' + "; " + expires;
+      } else {
+        document.cookie = 'newsletterpopup' + "= ''; -1";
+      }
+    }
+    
+    $(document).ready(function() {
+      {% if settings.newsletter_popup_display_on_mobile %}
+        initPopupNewsletter();
+      {% else %}
+        if ($(window).width() > 767) {
+          initPopupNewsletter();
+        }
+      {% endif %}
+    });
+  </script>
+{% endif %}

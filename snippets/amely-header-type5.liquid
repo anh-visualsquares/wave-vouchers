@@ -1,0 +1,50 @@
+<div class="mobile-navigation">
+  {% include 'slideout-menu' %}
+</div>
+{% if custom_content or enable_newsletter or enable_socials %}
+  <div class="top-header-content border-bottom">
+    <div class="top-header-left">
+      {% if custom_content %}
+        {% include 'header-custom-content' %}
+      {% endif %}
+    </div>
+    <div class="top-header-right">
+      {% if enable_newsletter %}
+        {% include 'header-newsletter' %}
+      {% endif %}
+      {% if enable_socials %}
+        {% include 'header-socials', snippet_class: 'child-border-left' %}
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+<div class="middle-header-content" {% if settings.header_middle_background_image != blank %}style="background-image: url({{ settings.header_middle_background_image | img_url: 'master' }})"{% endif %}>
+  <div class="container-fluid">
+    <div class="middle-header-wrapper">
+      <div class="toggle-menu-wrapper">
+        <div class="toggle_menu_mobile"><span class="ti-menu"></span></div>
+      </div>
+      <div class="nav-megamenu" id="AccessibleNav" role="navigation">
+        {% include 'megamenu' %}
+      </div>
+
+      {% include 'header-logo' %}
+
+      <div class="child-content">
+        {% include 'header-cart' %}
+        {% if customer_accounts_enabled %}
+          {% include 'header-my-account', showIcon: true %}
+        {% endif %}
+        {% if settings.search_select == 'show-on-click' %}
+          {% include 'header-search' %}
+        {% endif %}
+        {% if enable_currency %}
+          {% include 'currency-picker' %}
+        {% endif %}
+        {% if settings.search_select == 'show-always' %}
+          {% include 'header-search' %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

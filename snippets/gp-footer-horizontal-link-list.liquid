@@ -1,0 +1,16 @@
+<div class="{{ block.type }}-wrapper align-{{ block.settings.alignment }}">
+  {% if block.settings.heading_content != blank %}
+    <div class="title-content">
+      {{ block.settings.heading_content }}
+    </div>
+  {% endif %}
+  {% if block.settings.navigation != blank %}
+    <ul>
+      {% for link in linklists[block.settings.navigation].links %}
+        <li>
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

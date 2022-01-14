@@ -1,0 +1,142 @@
+{% assign product_per_row_desktop = settings.collection_page_product_per_row_desktop %}
+{% assign product_per_row_tablet = settings.collection_page_product_per_row_tablet %}
+{% assign product_per_row_mobile = settings.collection_page_product_per_row_mobile %}
+{% assign row_per_page = settings.collection_page_row_per_page %}
+{% assign limit = product_per_row_desktop | times: row_per_page %}
+{% if limit > 50 %}
+  {% assign limit = 50 %}
+{% endif %}
+
+{% assign view_mode = settings.collection_page_view_mode %}
+
+{% if section.settings.use_settings %}
+  {% assign product_per_row_desktop = section.settings.product_per_row_desktop %}
+  {% assign product_per_row_tablet = section.settings.product_per_row_tablet %}
+  {% assign product_per_row_mobile = section.settings.product_per_row_mobile %}
+  {% assign row_per_page = section.settings.row_per_page %}
+  {% assign limit = product_per_row_desktop | times: row_per_page %}
+  {% if limit > 50 %}
+    {% assign limit = 50 %}
+  {% endif %}
+{% endif %}
+
+{% if collection.products_count > 0 %}
+  {% paginate collection.products by limit %}
+    <div class="collection-top-filter {% if collection.products_count == 0 %}hidden{% endif %}">
+      <div class="collection-top-filter-inner">
+        <div class="product-count">
+          {% capture count_html %}
+            <span>{{ 'collections.general.items_with_count' | t: count: collection.products_count }}</span>
+          {% endcapture %}
+          {{ 'collections.general.items_with_count_html' | t: count_html: count_html }}
+        </div>
+        <a href="#" class="filter-title js-toggle-filter mobile-only"><span>{{ 'collections.filters.title_tags' | t }}</span><span class="ti-panel toggle-icon"></span></a>
+        {% include 'gp-sort-by', sort_type: 'select' %}
+        {% if view_mode == 'grid-list' or view_mode == 'list-grid' %}
+          <div class="gp-view-mode">
+            <a class="gp-view-mode-item gp-view-mode-grid {% if view_mode == 'grid-list' %}active{% endif %}" title="Grid" href="#" data-value="grid">
+              <span>{{ 'collections.general.grid' | t }}</span>
+            </a>
+            <a class="gp-view-mode-item gp-view-mode-list {% if view_mode == 'list-grid' %}active{% endif %}" title="List" href="#" data-value="list">
+              <span>{{ 'collections.general.list' | t }}</span>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="gp-products-inner row-wrapper row row-{{ product_per_row_desktop }} row-tablet-{{ product_per_row_tablet }} row-mobile-{{ product_per_row_mobile }}">
+      {% for product in collection.products limit:limit %}
+        <div class="col">
+          {% case view_mode %}
+            {% when 'list' %}
+              {% include 'gp-product-list' %}
+            {% when 'list-grid' %}
+              {% include 'gp-product-list' %}
+              {% include 'gp-product-grid' %}
+            {% when 'grid-list' %}
+              {% include 'gp-product-grid' %}
+              {% include 'gp-product-list' %}
+            {% else %}
+              {% include 'gp-product-grid' %}
+          {% endcase %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="ajax-loader"></div>
+    {% comment %} I leave gp-collection-pagination div outside  to make js function {% endcomment %}
+    <div class="gp-collection-pagination">
+      {% if paginate.pages > 1 %}
+        {% if settings.collection_page_pagination == 'loadmore' %}
+          {% if paginate.next.is_link %}
+            <div class="gp-pagination-loadmore">
+              <a class="btn" href="{{ paginate.next.url }}">{{ 'general.pagination.load_more' | t }}</a>
+            </div>
+          {% endif %}
+        {% else %}
+          {% include 'gp-pagination-custom' %}
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endpaginate %}
+{% else %}
+  <p class="text-center">{{ 'collections.general.no_matches' | t }}</p>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "2-columns-right settings",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This section contain settings for collection which used 2-columns-right layout. Value on these settings below will override the default value on Theme Settings."
+      },
+      {
+        "type": "header",
+        "content": "Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_settings",
+        "label": "Use these values instead of default values",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "product_per_row_desktop",
+        "label": "Number of product per row (desktop)",
+        "default": 4,
+        "min": 1,
+        "max": 8,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "product_per_row_tablet",
+        "label": "Number of product per row (tablet)",
+        "default": 4,
+        "min": 1,
+        "max": 5,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "product_per_row_mobile",
+        "label": "Number of product per row (mobile)",
+        "default": 2,
+        "min": 1,
+        "max": 3,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "row_per_page",
+        "label": "Number of row per page",
+        "default": 4,
+        "min": 1,
+        "max": 10,
+        "step": 1
+      }
+    ]
+  }
+{% endschema %}

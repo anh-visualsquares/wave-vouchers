@@ -1,0 +1,40 @@
+<div class="{{ block.type }}-wrapper block-{{ block.type }}-wrapper align-{{ block.settings.alignment }} image-align-{{ block.settings.image_alignment }} image-position-{{ block.settings.image_position }} position-{{ forloop.index }}">
+  {% if block.settings.image != blank %}
+    {% capture imageHtml %}
+      <div class="image-wrapper">
+        <img src="{{ block.settings.image | img_url: 'master' }}" alt="" />
+      </div>
+    {% endcapture %}
+  {% endif %}
+  {% if block.settings.image_position == 'top' or block.settings.image_position == 'left' %}
+    {{ imageHtml }}
+  {% endif %}
+  {% if block.settings.content != blank %}
+    <div class="content">
+      {{ block.settings.content }}
+    </div>
+  {% endif %}
+  {% if block.settings.image_position == 'bottom' or block.settings.image_position == 'right' %}
+    {{ imageHtml }}
+  {% endif %}
+</div>
+<style>
+  {% if block.settings.image_width != blank %}
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }} .image-wrapper img{
+      width: {{ block.settings.image_width }};
+      height: auto;
+    }
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-left .image-wrapper,
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-right .image-wrapper{
+      width: {{ block.settings.image_width }};
+    }
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-left .image-wrapper img,
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-right .image-wrapper img{
+      width: 100%;
+    }
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-left .content,
+    [data-section-id="{{ section.id }}"] .block-{{ block.type }}-wrapper.position-{{ forloop.index }}.image-position-right .content{
+      width: calc(100% - {{ block.settings.image_width }});
+    }
+  {% endif %}
+</style>

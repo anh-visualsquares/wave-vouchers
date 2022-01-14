@@ -1,0 +1,818 @@
+{% if collection.products_count > 0 %}
+  {% assign numberOfBlockFor1Column = 0 %}
+  {% for block in section.blocks %}
+    {% if block.type != 'banner' and block.type != 'text' and block.type != 'product_list' %}
+      {% assign numberOfBlockFor1Column = numberOfBlockFor1Column | plus: 1 %}
+    {% endif %}
+  {% endfor %}
+  {% if numberOfBlockFor1Column > 4 %}
+    {% assign numberOfBlockFor1Column = 4 %}
+  {% endif %}
+  <div class="gp-collection-filter-wrapper" data-section-id="{{ section.id }}" data-section-type="gp-product-slider">
+    <div class="ajax-loader"></div>
+    <div class="mobile-close-filter-slideout mobile-only"><span class="ti-close"></span></div>
+    <div class="row row-wrapper row-{{ numberOfBlockFor1Column | plus: 1 }} row-mobile-1">
+      <div class="col col-sort-by">
+        {% include 'gp-sort-by' %}
+      </div>
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'link_list' %}
+              {% if block.settings.navigation != blank %}
+                {% assign navigation = block.settings.navigation %}
+                {% if linklists[navigation].links.size > 0 %}
+                  <div class="col gp-cf-link-list">
+                    <div class="gp-cf-inner">
+                      {% if block.settings.title != blank %}
+                        <h5 class="has-toggle">{{ block.settings.title }}</h5>
+                      {% endif %}
+                      <div>
+                        <ul>
+                          {% for link in linklists[navigation].links %}
+                            <li>
+                              {% assign child_list_handle = link.title | handle %}
+                              <a href="{{ link.url }}" class="{% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}parent{% endif %}">{{ link.title }}</a>
+
+                              {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+                                <span class="ti-angle-down js-toggle-linklist"></span>
+                                <ul class="level1">
+                                  {% for child_link in linklists[child_list_handle].links %}
+                                    <li>
+                                      {% comment %} {% assign collectionHandle = child_link.url | split: '/' | last %}
+                                      {% if collections[collectionHandle].title != blank %}
+                                        {% assign collectionCount = collections[collectionHandle].products_count %}
+                                      {% endif %} {% endcomment %}
+                                      <a href="{{ child_link.url }}">{{ child_link.title }}{% comment %}{% if collectionCount %} ({{ collectionCount }}){% endif %}{% endcomment %}</a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% when 'filter' %}
+              {% if block.settings.tag_list != blank %}
+                {% assign tags = block.settings.tag_list | split: ',' %}
+                {% assign has_tags = false %}
+                {% for t in tags %}
+                  {% assign tag = t | strip %}
+                  {% if current_tags contains tag %}
+                    {% assign has_tags = true %}
+                  {% else %}
+                    {% if collection.tags contains tag %}
+                      {% assign has_tags = true %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                
+                <div id="filter-block-{{ block.id }}" class="col gp-cf-filter filter-default {% if has_tags == false %}hidden{% endif %}">
+                  <div class="gp-cf-inner">
+                    {% if block.settings.title != blank %}
+                      <h5 class="has-toggle">{{ block.settings.title }}</h5>
+                    {% endif %}
+                    <div>
+                      {% for t in tags %}
+                        {% assign tag = t | strip %}
+                        {% assign tag_value = tag | handleize %}
+                        
+                        {% if current_tags contains tag %}
+                          <div class="form-checkbox">
+                            <input id="tag-{{ tag_value }}" type="checkbox" value="{{ tag_value }}" checked="checked">
+                            <label for="tag-{{ tag_value }}">
+                              {{ tag }}
+                            </label>
+                            <label for="tag-{{ tag_value }}" class="remove-label">
+                              <span class="ti-close"></span>
+                            </label>
+                          </div>
+                        {% else %}
+                          {% if collection.tags contains tag %}
+                            <div class="form-checkbox">
+                              <input id="tag-{{ tag_value }}" type="checkbox" value="{{ tag_value }}">
+                              <label for="tag-{{ tag_value }}">
+                                {{ tag }}
+                              </label>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% when 'filter-swatch' %}
+              {% if block.settings.tag_list != blank %}
+                {% assign tags = block.settings.tag_list | split: ',' %}
+                {% assign has_tags = false %}
+                {% for t in tags %}
+                  {% assign tag = t | strip %}
+                  {% if current_tags contains tag %}
+                    {% assign has_tags = true %}
+                  {% else %}
+                    {% if collection.tags contains tag %}
+                      {% assign has_tags = true %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                
+                <div id="filter-block-{{ block.id }}" class="col gp-cf-filter filter-swatch {% if has_tags == false %}hidden{% endif %}">
+                  <div class="gp-cf-inner">
+                    {% if block.settings.title != blank %}
+                      <h5 class="has-toggle">{{ block.settings.title }}</h5>
+                    {% endif %}
+                    <div>
+                      {% for t in tags %}
+                        {% assign tag = t | strip %}
+                        {% assign tag_value = tag | handleize %}
+                        
+                        {% if current_tags contains tag %}
+                          <div class="form-checkbox">
+                            <input id="tag-{{ tag_value }}" type="checkbox" value="{{ tag_value }}" checked="checked">
+                            <label for="tag-{{ tag_value }}">
+                              {{ tag }}
+                            </label>
+                            <label for="tag-{{ tag_value }}" class="remove-label">
+                              <span class="ti-close"></span>
+                            </label>
+                          </div>
+                        {% else %}
+                          {% if collection.tags contains tag %}
+                            <div class="form-checkbox">
+                              <input id="tag-{{ tag_value }}" type="checkbox" value="{{ tag_value }}">
+                              <label for="tag-{{ tag_value }}">
+                                {{ tag }}
+                              </label>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% when 'filter-color' %}
+              {% if block.settings.tag_list != blank %}
+                {% assign tags = block.settings.tag_list | split: ',' %}
+                
+                {% assign has_tags = false %}
+                {% for t in tags %}
+                  {% assign tag = t | strip %}
+                  {% if current_tags contains tag %}
+                    {% assign has_tags = true %}
+                  {% else %}
+                    {% if collection.tags contains tag %}
+                      {% assign has_tags = true %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                <div id="filter-block-{{ block.id }}" class="col gp-cf-filter filter-color {% if has_tags == false %}hidden{% endif %}">
+                  <div class="gp-cf-inner">
+                    {% if block.settings.title != blank %}
+                      <h5 class="has-toggle">{{ block.settings.title }}</h5>
+                    {% endif %}
+                    <div>
+                      {% for t in tags %}
+                        {% assign tag = t | strip %}
+                        {% assign tag_value = tag | handleize %}
+                        
+                        {% if current_tags contains tag %}
+                          <div class="form-checkbox">
+                            <input id="tag-{{ tag_value }}" type="checkbox" value="{{ tag_value }}" checked="checked">
+                            <label for="tag-{{ tag_value }}" option-label="{{ tag | capitalize }}">
+                              <span class="color" style="background-image: url({{ tag | handle | append: '.' | append: 'png' | asset_img_url: '50x' }}); background-color: {{ tag | split: ' ' | last | handle }};"></span>
+                            </label>
+                            <label for="tag-{{ tag_value }}" class="remove-label">
+                              <span class="ti-close"></span>
+                            </label>
+                          </div>
+                        {% else %}
+                          {% if collection.tags contains tag %}
+                            <div class="form-checkbox">
+                              <input id="tag-{{ tag_value }}" type="checkbox" value="{{ tag_value }}">
+                              <label for="tag-{{ tag_value }}" option-label="{{ tag | capitalize }}">
+                                <span class="color" style="background-image: url({{ tag | handle | append: '.' | append: 'png' | asset_img_url: '50x' }}); background-color: {{ tag | split: ' ' | last | handle }};"></span>
+                              </label>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% when 'product_list' %}
+              {% if block.settings.collection != blank %}
+                <div class="col gp-cf-product-list">
+                  <div class="gp-cf-inner">
+                    {% include 'gp-product-list-html' %}
+                  </div>
+                </div>
+              {% endif %}
+            {% when 'banner' %}
+              <div class="col gp-cf-banner" {{ block.shopify_attributes }}>
+                <div class="gp-cf-inner">
+                  {% include 'gp-banner-html' %}
+                </div>
+              </div>
+            {% when 'banner-with-content' %}
+              <div class="col gp-cf-banner" {{ block.shopify_attributes }}>
+                <div class="gp-cf-inner">
+                  {% include 'gp-banner-with-text-html' %}
+                </div>
+              </div>
+            {% when 'text' %}
+              {% if block.settings.content != blank %}
+                <div class="col gp-cf-text">
+                  <div class="gp-cf-inner">
+                    {% include 'gp-cms-text-html' %}
+                  </div>
+                </div>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      /* COLLECTION FILTER */
+      $(document).on('click', '.gp-collection-filter-wrapper .gp-cf-filter input', function() {
+        if ($('.gp-collection .gp-products').length) {
+          var newTags = [];
+          $('.gp-collection-filter-wrapper .gp-cf-filter input:checked').each(function() {
+            newTags.push($(this).attr('value'));
+          });
+          var newUrl = '';
+          if (newTags.length) {
+            var query = newTags.join('+');
+            newUrl = $('{{ "tag" | link_to_tag: "tag" }}').attr('href').replace('/' + 'tag', '/' + query);
+          } else {
+            {% if collection.handle %}
+              newUrl = '/collections/{{ collection.handle }}';
+            {% elsif collection.products.first.type == collection.title %}
+              newUrl = '{{ collection.title | url_for_type }}';
+            {% elsif collection.products.first.vendor == collection.title %}
+              newUrl = '{{ collection.title | url_for_vendor }}';
+            {% endif %}
+          }
+          window.history.pushState({
+            param: ''
+          }, newUrl, newUrl);
+          $.ajax({
+            type: 'get',
+            url: newUrl,
+            beforeSend: function () {
+              $('.gp-collection-filter-wrapper .ajax-loader').show();
+              $('.gp-collection .gp-products .ajax-loader').show();
+            },
+            success: function (data) {
+              $('.gp-collection-filter-wrapper .ajax-loader').hide();
+              $('.gp-collection .gp-products .ajax-loader').hide();
+              var currentList = $('.gp-collection .gp-products .gp-products-inner');
+              var productList = $(data).find('.gp-collection .gp-products .gp-products-inner');
+              if (currentList.length && productList.length) {
+                currentList.replaceWith(productList);
+              }
+
+              $('.gp-collection-filter-wrapper .gp-cf-filter').each(function() {
+                var filter_id = $(this).attr('id');
+                var filter = $(data).find('.gp-collection-filter-wrapper #' + filter_id);
+                if (filter.length) {
+                  $(this).replaceWith(filter);
+                }
+              });
+              // init pagination
+              var newPagination = $(data).find('.gp-collection-pagination');
+              if (newPagination.length) {
+                $('.gp-collection-pagination').html(newPagination.html());
+              } else {
+                $('.gp-collection-pagination').html();
+              }
+              //init count product
+              var newCount = $(data).find('.collection-top-filter .product-count');
+              if (newCount.length) {
+                $('.collection-top-filter .product-count').html(newCount.html());
+              }
+              //init product sort
+              var newSort = $(data).find('.collection-top-filter .sort-by');
+              if (newSort.length) {
+                $('.collection-top-filter .sort-by').html(newSort.html());
+              }
+            },
+            error: function (xhr, text) {
+              $('.gp-collection-filter-wrapper .ajax-loader').hide();
+              $('.gp-collection .gp-products .ajax-loader').hide();
+            }
+          });
+        }
+      });
+
+      /* TOGGLE FILTER TITLE ON SIDEBAR FILTER */
+      $(document).on('click', '.collection-sidebar-filter .gp-collection-filter-wrapper h5.has-toggle', function() {
+        if ($(window).width() > 767) {
+          $(this).toggleClass('active');
+          $(this).next().slideToggle();
+        }
+      });
+
+      /* TOGGLE FILTER TITLE ON MOBILE SLIDEOUT FILTER */
+      $(document).on('click', '.gp-collection-filter-wrapper .sort-by-ul > h5, .gp-cf-inner > h5', function() {
+        if ($(window).width() < 768) {
+          $(this).toggleClass('active');
+          $(this).next().slideToggle();
+        }
+      });
+    });
+  </script>
+{% endif %}
+{% schema %}
+  {
+    "name": "Filters",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This section contain filter settings for all kind of collection layout."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "link_list",
+        "name": "Category tree",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "link_list",
+            "id": "navigation",
+            "label": "Navigation"
+          }
+        ]
+      },
+      {
+        "type": "filter",
+        "name": "Filter by tag (default)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "tag_list",
+            "label": "Tag List",
+            "info": "Separate by a comma, i.e: Tag Name 1,Tag Name 2,..."
+          }
+        ]
+      },
+      {
+        "type": "filter-color",
+        "name": "Filter by tag (color)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "tag_list",
+            "label": "Tag List",
+            "info": "Separate by a comma, i.e: Tag Name 1,Tag Name 2,..."
+          }
+        ]
+      },
+      {
+        "type": "filter-swatch",
+        "name": "Filter by tag (swatch)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "tag_list",
+            "label": "Tag List",
+            "info": "Separate by a comma, i.e: Tag Name 1,Tag Name 2,..."
+          }
+        ]
+      },
+      {
+        "type": "product_list",
+        "name": "Featured products",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "This block is only show on 2-columns & 3-columns collection pages."
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "checkbox",
+            "id": "enable_slider",
+            "label": "Enable slider",
+            "default": true
+          },
+          {
+            "type": "range",
+            "id": "limit",
+            "label": "Number of product",
+            "default": 3,
+            "min": 1,
+            "max": 5,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "type": "banner",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "This block is only show on 2-columns & 3-columns collection pages."
+          },
+          {
+            "type": "header",
+            "content": "Common Settings"
+          },
+          {
+            "type": "header",
+            "content": "Images"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Action URL"
+          },
+          {
+            "type": "header",
+            "content": "Effect"
+          },
+          {
+            "type": "select",
+            "id": "hover_effect",
+            "label": "Hover effect",
+            "default": "none",
+            "options": [
+              {
+                "value": "none",
+                "label": "No effect"
+              },
+              {
+                "value": "zoom",
+                "label": "Zoom"
+              },
+              {
+                "value": "border-zoom",
+                "label": "Border Zoom"
+              },
+              {
+                "value": "flashed",
+                "label": "Flashed"
+              },
+              {
+                "value": "zoom-flashed",
+                "label": "Zoom Flashed"
+              },
+              {
+                "value": "shadow-corner",
+                "label": "Shadow Corner"
+              },
+              {
+                "value": "zoom-shadow",
+                "label": "Zoom Shadow"
+              },
+              {
+                "value": "cup-border",
+                "label": "Cup Border"
+              },
+              {
+                "value": "flashed-zoom",
+                "label": "Flashed Zoom"
+              },
+              {
+                "value": "zoom-out-shadow",
+                "label": "Zoom Out Shadow"
+              },
+              {
+                "value": "mist",
+                "label": "Mist"
+              },
+              {
+                "value": "mist-text",
+                "label": "Mist Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "banner-with-content",
+        "name": "Image with content inside",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "This block is only show on 2-columns & 3-columns collection pages."
+          },
+          {
+            "type": "header",
+            "content": "Common Settings"
+          },
+          {
+            "type": "header",
+            "content": "Images"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Action URL"
+          },
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Heading title</h2>\n<a href=\"#\">SHOP NOW</a>"
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Content Layout"
+          },
+          {
+            "type": "text",
+            "id": "content_width",
+            "label": "Width",
+            "info": "Optional. Enter value of pixel, percentage. Eg: 400px, 50%."
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "content_position",
+            "label": "Position",
+            "default": "middle-center",
+            "options": [
+              {
+                "value": "top-left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top-center",
+                "label": "Top Center"
+              },
+              {
+                "value": "top-right",
+                "label": "Top Right"
+              },
+              {
+                "value": "middle-left",
+                "label": "Middle Left"
+              },
+              {
+                "value": "middle-center",
+                "label": "Middle Center"
+              },
+              {
+                "value": "middle-right",
+                "label": "Middle Right"
+              },
+              {
+                "value": "bottom-left",
+                "label": "Bottom Left"
+              },
+              {
+                "value": "bottom-center",
+                "label": "Bottom Center"
+              },
+              {
+                "value": "bottom-right",
+                "label": "Bottom Right"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              },
+              {
+                "value": "custom-horizontal",
+                "label": "Custom horizontal, middle Vertical"
+              },
+              {
+                "value": "custom-vertical",
+                "label": "Custom vertical, center Horizontal"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Only applicable on *Custom* position"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_x_direction",
+            "label": "Horizontal alignment direction",
+            "default": "left-to-right",
+            "options": [
+              {
+                "value": "left-to-right",
+                "label": "Align from left"
+              },
+              {
+                "value": "right-to-left",
+                "label": "Align from right"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_x",
+            "label": "Horizontal alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "select",
+            "id": "content_position_custom_y_direction",
+            "label": "Vertical alignment direction",
+            "default": "top-to-bottom",
+            "options": [
+              {
+                "value": "top-to-bottom",
+                "label": "Align from top"
+              },
+              {
+                "value": "bottom-to-top",
+                "label": "Align from bottom"
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "id": "content_position_custom_y",
+            "label": "Vertical alignment",
+            "default": 30,
+            "min": 0,
+            "max": 50,
+            "unit": "%"
+          },
+          {
+            "type": "header",
+            "content": "Effect"
+          },
+          {
+            "type": "select",
+            "id": "hover_effect",
+            "label": "Hover effect",
+            "default": "none",
+            "options": [
+              {
+                "value": "none",
+                "label": "No effect"
+              },
+              {
+                "value": "zoom",
+                "label": "Zoom"
+              },
+              {
+                "value": "border-zoom",
+                "label": "Border Zoom"
+              },
+              {
+                "value": "flashed",
+                "label": "Flashed"
+              },
+              {
+                "value": "zoom-flashed",
+                "label": "Zoom Flashed"
+              },
+              {
+                "value": "shadow-corner",
+                "label": "Shadow Corner"
+              },
+              {
+                "value": "zoom-shadow",
+                "label": "Zoom Shadow"
+              },
+              {
+                "value": "cup-border",
+                "label": "Cup Border"
+              },
+              {
+                "value": "flashed-zoom",
+                "label": "Flashed Zoom"
+              },
+              {
+                "value": "zoom-out-shadow",
+                "label": "Zoom Out Shadow"
+              },
+              {
+                "value": "mist",
+                "label": "Mist"
+              },
+              {
+                "value": "mist-text",
+                "label": "Mist Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "Text content",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "This block is only show on 2-columns & 3-columns collection pages."
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

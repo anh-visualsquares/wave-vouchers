@@ -1,0 +1,38 @@
+<div class="gp-product-sidebar-widget">
+  <div class="row row-wrapper row-1">
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'product_list_right' %}
+            {% if block.settings.collection != blank %}
+              <div class="col gp-cf-product-list big-desktop-only">
+                <div class="gp-cf-inner">
+                  {% include 'gp-product-list-html' %}
+                </div>
+              </div>
+            {% endif %}
+          {% when 'banner-right' %}
+            <div class="col gp-cf-banner big-desktop-only" {{ block.shopify_attributes }}>
+              <div class="gp-cf-inner">
+                {% include 'gp-banner-html' %}
+              </div>
+            </div>
+          {% when 'banner-with-content-right' %}
+            <div class="col gp-cf-banner big-desktop-only" {{ block.shopify_attributes }}>
+              <div class="gp-cf-inner">
+                {% include 'gp-banner-with-text-html' %}
+              </div>
+            </div>
+          {% when 'text-right' %}
+            {% if block.settings.content != blank %}
+              <div class="col gp-cf-text big-desktop-only">
+                <div class="gp-cf-inner">
+                  {% include 'gp-cms-text-html' %}
+                </div>
+              </div>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>

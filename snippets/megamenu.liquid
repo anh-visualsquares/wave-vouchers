@@ -1,0 +1,113 @@
+<ul class="site-nav list--inline">
+  {% if section.blocks.size > 0 %}
+    {% for block in section.blocks %}
+      {% assign hasDropdown = false %}
+      {% case block.type %}
+        {% when 'normal-menu' %}
+          {% if block.settings.menu != blank %}
+            {% assign hasDropdown = true %}
+          {% endif %}
+        {% when 'advanced-menu' %}
+          {% if block.settings.menu != blank or block.settings.top_content != blank or block.settings.bottom_content != blank or block.settings.left_content != blank or block.settings.right_content != blank %}
+            {% assign hasDropdown = true %}
+          {% endif %}
+        {% when 'static-menu' %}
+          {% if block.settings.static_content != blank %}
+            {% assign hasDropdown = true %}
+          {% endif %}
+        {% else %}
+      {% endcase %}
+      
+      {% if block.settings.title != blank %}
+        {% assign widthClass = 'w-1-column' %}
+        {% if block.settings.dropdown_content_width != blank %}
+          {% assign contentWidth = block.settings.dropdown_content_width %}
+          {% if contentWidth != '1' %}
+            {% assign widthClass = 'w-' | append: contentWidth | append: '-columns' %}
+          {% endif %}
+        {% endif %}
+        {% if block.settings.is_fullwidth %}
+          {% assign widthClass = widthClass | append: ' fullwidth' %}
+        {% endif %}
+        {% if middleLogo %}
+          {% assign middlePos = section.blocks.size | divided_by: 2 %}
+          {% assign modulo = section.blocks.size | modulo: 2 %}
+          {% assign logoPos = middlePos | plus: modulo | plus: 1 %}
+          
+          {% if forloop.first %}
+            <li class="left-side-menu header-side-menu">
+              <ul>
+          {% endif %}
+          {% if forloop.index == logoPos %}
+              </ul>
+            </li>
+            {% include 'header-logo' %}
+            <li class="right-side-menu header-side-menu">
+              <ul>
+          {% endif %}
+                <li class="{{ block.type }} level0 {% if hasDropdown %}dropdown{% endif %} {{ widthClass }}">
+                  <a href="{% if block.settings.link != blank %}{{ block.settings.link }}{% else %}#{% endif %}" class="level0">
+                    <span>
+                      {{ block.settings.title }}
+                      {% if block.settings.menu_label_text != blank %}
+                        {% assign labelBgColor = block.settings.menu_label_style %}
+                        <span class="label-menu" style="background: {{ labelBgColor }}">{{ block.settings.menu_label_text }}<span style="border-color: {{ labelBgColor }} transparent transparent {{ labelBgColor }};"></span></span>
+                      {% endif %}
+                    </span>
+                  </a>
+                  {% if hasDropdown %}
+                    <span class="toggle-menu">
+                      <span class="icon-plus"></span>
+                    </span>
+                    <div class="dropdown-menu">
+
+                      {% case block.type %}
+                        {% when 'normal-menu' %}
+                          {% include 'megamenu-dropdown-normal' %}
+                        {% when 'advanced-menu' %}
+                          {% include 'megamenu-dropdown-advanced' %}
+                        {% when 'static-menu' %}
+                          {{ block.settings.static_content }}
+                        {% else %}
+                      {% endcase %}
+
+                    </div>
+                  {% endif %}
+                </li>
+          {% if forloop.last %}
+              </ul>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="{{ block.type }} level0 {% if hasDropdown %}dropdown{% endif %} {{ widthClass }}">
+            <a href="{% if block.settings.link != blank %}{{ block.settings.link }}{% else %}#{% endif %}" class="level0">
+              <span>
+                {{ block.settings.title }}
+                {% if block.settings.menu_label_text != blank %}
+                  {% assign labelBgColor = block.settings.menu_label_style %}
+                  <span class="label-menu" style="background: {{ labelBgColor }}">{{ block.settings.menu_label_text }}<span style="border-color: {{ labelBgColor }} transparent transparent {{ labelBgColor }};"></span></span>
+                {% endif %}
+              </span>
+            </a>
+            {% if hasDropdown %}
+              <span class="toggle-menu">
+                <span class="icon-plus"></span>
+              </span>
+              <div class="dropdown-menu">
+                {% case block.type %}
+                  {% when 'normal-menu' %}
+                    {% include 'megamenu-dropdown-normal' %}
+                  {% when 'advanced-menu' %}
+                    {% include 'megamenu-dropdown-advanced' %}
+                  {% when 'static-menu' %}
+                    {{ block.settings.static_content }}
+                  {% else %}
+                {% endcase %}
+              </div>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</ul>

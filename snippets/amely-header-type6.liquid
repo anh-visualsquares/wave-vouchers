@@ -1,0 +1,44 @@
+<div class="mobile-navigation">
+  {% include 'slideout-menu' %}
+</div>
+<div class="top-header-content border-bottom">
+  <div class="top-header-left">
+    {% if custom_content %}
+      {% include 'header-custom-content', snippet_class: 'border-left' %}
+    {% endif %}
+  </div>
+  <div class="top-header-right">
+    {% if enable_newsletter %}
+      {% include 'header-newsletter', snippet_class: 'border-left' %}
+    {% endif %}
+    {% if enable_socials %}
+      {% include 'header-socials', snippet_class: 'child-border-left' %}
+    {% endif %}
+  </div>
+</div>
+<div class="middle-header-content border-bottom" {% if settings.header_middle_background_image != blank %}style="background-image: url({{ settings.header_middle_background_image | img_url: 'master' }})"{% endif %}>
+  <div class="container">
+    <div class="middle-header-wrapper">
+      <div class="middle-header-left-wrapper">
+        <div class="toggle_menu_mobile"><span class="ti-menu"></span></div>
+        {% if enable_currency %}
+          {% include 'currency-picker' %}
+        {% endif %}
+      </div>
+      {% include 'header-logo' %}
+
+      <div class="child-content">
+        {% include 'header-cart' %}
+        {% if customer_accounts_enabled %}
+          {% include 'header-my-account', showIcon: true %}
+        {% endif %}
+        {% include 'header-search' %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottom-header-content">
+  <div class="nav-megamenu" id="AccessibleNav" role="navigation">
+    {% include 'megamenu' %}
+  </div>
+</div>

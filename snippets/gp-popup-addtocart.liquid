@@ -1,0 +1,46 @@
+<div class="gp-popup-addtocart gp-popup" id="gp-popup-addtocart">
+  <div class="ajax_cart-popup popup__columns">
+    <div class="ajax_header">
+      <span class="item-added-to-cart">{{ 'general.ajaxcart.item_to_cart' | t }}</span>
+      <span class="one-item-text" style="display: none;">{{ 'general.ajaxcart.item_to_cart' | t }}</span>
+      <span class="other-item-text" style="display: none;">{{ 'general.ajaxcart.items_to_cart' | t }}</span>
+      <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+    </div>
+    <div class="popup__column">
+      <div class="popup__table">
+        <div class="popup__table-col">
+          <div class="popup__column--media">
+            <div class="popup__image-wrapper">
+            </div>
+          </div>
+        </div>
+        <div class="popup__table-col">
+          <div class="popup__column--result">
+            <div class="product-confirm-detail">
+              <div class="product-confirm-name"></div>
+              <div class="product-confirm-qty"><span class="title">{{ 'general.ajaxcart.quantity' | t }}</span><span class="value"></span></div>
+              <div class="product-confirm-subtotal"><span class="title">{{ 'general.ajaxcart.cart_subtotal' | t }}</span><span class="value"><span class="price"></span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ajax_footer">
+      <div class="actions">
+        <a href="#" class="btn btn-2 popup__action-close btn-close">{{ 'general.ajaxcart.continue_shopping' | t }}</a>
+        <a href="/cart" class="btn">{{ 'general.ajaxcart.proceed_to_cart' | t }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="gp-popup-addtocart gp-popup" id="gp-popup-addtocart-error">
+  <div class="ajax_cart-popup popup__columns">
+    <div class="ajax_header">
+      <span class="item-added-to-cart">{{ 'general.ajaxcart.error' | t }}</span>
+      <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+    </div>
+    <div class="popup__column">
+      
+    </div>
+  </div>
+</div>

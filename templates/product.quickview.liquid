@@ -1,0 +1,159 @@
+{% layout none %}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign compare_at_price = current_variant.compare_at_price -%}
+{%- assign price = current_variant.price -%}
+
+<div>
+  <div class="product-quickview-container">
+    <div class="product-media {% if product.images.size == 0 %}no-media{% endif %}">
+      {% if product.images.size > 0 %}
+        <div class="owl-carousel">
+          {% for image in product.images %}
+            <div class="item" data-position="{{ forloop.index }}">
+              <img src="{{ image | img_url: 'master' }}" alt="" />
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+    <div class="product-info-main gp-product-detail">
+      <div class="product-info-main-inner">
+        <div class="gp-product-col-main-inner">
+          <div class="product-detail-name">
+            <h3>{{ product.title }}</h3>
+          </div>
+          <div class="product-info-price">
+            {% include 'product-price', variant: current_variant %}
+          </div>
+          {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+            <div class="product__policies rte">
+              {%- if shop.taxes_included -%}
+                {{ 'products.product.include_taxes' | t }}
+              {%- endif -%}
+              {%- if shop.shipping_policy.body != blank -%}
+                {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          {% capture "form_classes" -%}
+            product-form product-form-quickview {% if settings.product_page_enable_payment_button and product.has_only_default_variant%} product-form--payment-button-no-variants{% endif %}
+          {%- endcapture %}
+
+          {% form 'product', product, class:form_classes, novalidate: 'novalidate' %}
+            {% unless product.has_only_default_variant %}
+              {% for option in product.options_with_values %}
+                <div class="selector-wrapper js product-form__item">
+                  <label {% if option.name == 'default' %}class="label--hidden" {% endif %}for="SingleOptionSelector-{{ forloop.index0 }}">
+                    {{ option.name }}
+                  </label>
+                  
+                  {% assign optionName = option.name | downcase %}
+
+                  {% assign colorSwatchArr = settings.product_page_option_color_swatch | split: ',' %}
+                  {% for item in colorSwatchArr %}
+                    {% assign stripItem = item | strip | downcase %}
+                    {% if stripItem == optionName %}
+                      <div class="color-swatch gp-swatch">
+                        {% for value in option.values %}
+                          <span class="option-item {% if option.selected_value == value %} selected {% endif %}" data-product-id="{{ product.id }}" data-option="{{ option.name | handleize }}" data-value="{{ value | escape }}">
+                            <span option-label="{{ value | escape }}" class="color" style="background-image: url({{ value | handle | append: '.' | append: 'png' | asset_img_url: '50x' }}); background-color: {{ value | split: ' ' | last | handle }};"></span>
+                          </span>
+                        {% endfor %}
+                      </div>
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% assign swatchArr = settings.product_page_option_swatch | split: ',' %}
+                  {% for item in swatchArr %}
+                    {% assign stripItem = item | strip | downcase %}
+                    {% if stripItem == optionName %}
+                      <div class="swatch gp-swatch">
+                        {% for value in option.values %}
+                          <span class="option-item {% if option.selected_value == value %} selected {% endif %}" data-product-id="{{ product.id }}" data-option="{{ option.name | handleize }}" data-value="{{ value | escape }}">
+                            <span option-label="{{ value | escape }}">{{ value }}</span>
+                          </span>
+                        {% endfor %}
+                      </div>
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                  <select class="single-option-selector single-option-selector-quickview product-form__input" data-product-id="{{ product.id }}" data-option="{{ option.name | handleize }}" id="SingleOptionSelector-{{ forloop.index0 }}" data-index="option{{ forloop.index }}">
+                    {% for value in option.values %}
+                      <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endfor %}
+            {% endunless %}
+
+            <select name="id" id="ProductSelect-quickview" class="product-form__variants no-js">
+              {% for variant in product.variants %}
+                {% assign vPrice = variant.price %}
+                {% assign vComparePrice = variant.compare_at_price %}
+                {% if variant.available %}
+                  <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}" data-variant-image="{{ variant.image | img_url:'master' }}" {% if variant.inventory_policy == 'continue' %} continue="continue"{% endif %} data-price="{{ vPrice }}" data-compare-at-price="{{ vComparePrice }}">
+                    {{ variant.title }}
+                  </option>
+                {% else %}
+                  <option disabled="disabled" data-variant-image="{{ variant.image | img_url:'master' }}" continue="stop" data-price="{{ vPrice }}" data-compare-at-price="{{ vComparePrice }}">{{ variant.title }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            
+            <div class="product-form__item product-form__item--submit{% if settings.product_page_enable_payment_button %} product-form__item--payment-button{% endif %}{% if product.has_only_default_variant %} product-form__item--no-variants{% endif %}">
+              <div id="error-quantity-quickview" class="form-message form-message--error product__quantity-error hide" tabindex="-1">
+                {% include 'icon-error' %} {{ 'products.product.quantity_minimum_message' | t }}
+              </div>
+              <div class="gp-qty-and-additional-btn">
+                <div class="gp-product-qty">
+                  <span class="edit-qty minus"><i class="ion-ios-minus-empty"></i></span>
+                  <input type="number" id="Quantity-quickview" name="quantity" value="1" min="1" class="product-form__input qty-input" pattern="[0-9]*">
+                  <span class="edit-qty plus"><i class="ion-ios-plus-empty"></i></span>
+                </div>
+                <div class="gp-product-additional-buttons">
+                  {% if settings.product_page_show_add_to_wishlist %}
+                    <a href="#" title="{{ 'products.product.add_to_wishlist' | t }}" data-wishlist-add="{{ 'products.product.add_to_wishlist' | t }}" data-wishlist-added="{{ 'products.product.added_to_wishlist' | t }}" class="btn-2 btn-wishlist" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}"><span class="ion-android-favorite-outline"></span></a>
+                  {% endif %}
+                  {% if settings.product_page_show_add_to_compare %}
+                    <a href="#" title="{{ 'products.product.add_to_compare' | t }}" data-compare-add="{{ 'products.product.add_to_compare' | t }}" data-compare-added="{{ 'products.product.added_to_compare' | t }}" class="btn-2 btn-compared " data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}"><span class="ion-ios-shuffle-strong"></span></a>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="gp-product-main-button">
+                <button type="submit" name="add" id="AddToCart-quickview" {% unless current_variant.available %}disabled="disabled"{% endunless %} class="btn product-form__cart-submit btn-add-to-cart-product-page" data-text-add-to-cart="{{ 'products.product.add_to_cart' | t }}" data-text-soldout="{{ 'products.product.sold_out' | t }}">
+                  <span id="AddToCartText-quickview">
+                    {% unless current_variant.available %}
+                      {{ 'products.product.sold_out' | t }}
+                    {% else %}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {% endunless %}
+                  </span>
+                </button>
+              </div>
+            </div>
+          {% endform %}
+          {%- comment -%}
+            Live region for announcing updated price and availability to screen readers
+          {%- endcomment -%}
+          <p class="visually-hidden" data-product-status
+            aria-live="polite"
+            role="status"
+          ></p>
+          
+          {% unless product == empty %}
+            <script type="application/json" id="ProductJson-quickview">
+              {{ product | json }}
+            </script>
+          {% endunless %}
+          <div class="product-description">
+            {{ product.description | truncate: 300 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

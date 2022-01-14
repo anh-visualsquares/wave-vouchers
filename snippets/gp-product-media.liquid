@@ -1,0 +1,145 @@
+{%- assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image -%}
+<div class="gp-product-media-wrapper {{ defaultTemplate }} zoom-mode-{{ defaultZoom }}">
+  {% if defaultZoom == 'light-box' %}
+    <div class="data-images-light-box" data-title="{{ featured_image.alt | escape }}" data-image="{{ featured_image | img_url: 'master' }}"></div>
+    {% for image in product.images %}
+      {% if image != featured_image %}
+        <div class="data-images-light-box" data-title="{{ image.alt | escape }}" data-image="{{ image | img_url: 'master' }}"></div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  {% if product.images.size > 0 %}
+    {% case defaultTemplate %}
+      {% when 'gallery-list' %}
+        <ul id="gp-media-main-slider">
+          <li class="{% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+            <img src="{{ featured_image | img_url: '300x300' }}" data-src="{{ featured_image | img_url: 'master' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+            {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}
+              <div class="label-video">{{ 'products.product.video' | t }}</div>
+            {% endif %}
+          </li>
+          {% for image in product.images %}
+            {% if image != featured_image %}
+              <li class="{% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                <img src="{{ image | img_url: '300x300' }}" data-src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+                {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+                  <div class="label-video">{{ 'products.product.video' | t }}</div>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <script>
+          $(document).ready(function() {
+            if ($('body').hasClass('template-product')) {
+              $('body > .page-container').addClass('overflow-visible');
+            }
+          });
+        </script>
+      {% when 'vertical-thumbnail' %}
+        <div id="gp-media-main-slider">
+          <div class="item {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+            <img src="{{ featured_image | img_url: '300x300' }}" data-src="{{ featured_image | img_url: 'master' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+            {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}
+              <div class="label-video">{{ 'products.product.video' | t }}</div>
+            {% endif %}
+          </div>
+          {% for image in product.images %}
+            {% if image != featured_image %}
+              <div class="item {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                <img src="{{ image | img_url: '300x300' }}" data-src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+                {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+                  <div class="label-video">{{ 'products.product.video' | t }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="gp-media-thumb-slider-wrapper">
+          <div id="gp-media-thumb-slider" data-count="{{ product.images.size }}">
+            <div class="item {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+              <img src="{{ featured_image | img_url: '500x500' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+            </div>
+            {% for image in product.images %}
+              {% if image != featured_image %}
+                <div class="item {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                  <img src="{{ image | img_url: '500x500' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% when 'horizontal-thumbnail' %}
+        <div id="gp-media-main-slider">
+          <div class="item {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+            <img src="{{ featured_image | img_url: '300x300' }}" data-src="{{ featured_image | img_url: 'master' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+            {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}
+              <div class="label-video">{{ 'products.product.video' | t }}</div>
+            {% endif %}
+          </div>
+          {% for image in product.images %}
+            {% if image != featured_image %}
+              <div class="item {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                <img src="{{ image | img_url: '300x300' }}" data-src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+                {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+                  <div class="label-video">{{ 'products.product.video' | t }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div id="gp-media-thumb-slider">
+          <div class="item {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+            <img src="{{ featured_image | img_url: '300x300' }}" data-src="{{ featured_image | img_url: 'master' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+          </div>
+          {% for image in product.images %}
+            {% if image != featured_image %}
+              <div class="item {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                <img src="{{ image | img_url: '300x300' }}" data-src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% when 'no-thumbnail' %}
+        <div id="gp-media-main-slider">
+          <div class="item {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+            <img src="{{ featured_image | img_url: '300x300' }}" data-src="{{ featured_image | img_url: 'master' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+            {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}
+              <div class="label-video">{{ 'products.product.video' | t }}</div>
+            {% endif %}
+          </div>
+          {% for image in product.images %}
+            {% if image != featured_image %}
+              <div class="item {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                <img src="{{ image | img_url: '300x300' }}" data-src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+                {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+                  <div class="label-video">{{ 'products.product.video' | t }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% when 'full-screen-multiple-slide' %}
+        <div id="gp-media-main-slider">
+          <div class="item {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}has-video-content{% endif %}">
+            <img src="{{ featured_image | img_url: 'master' }}" alt="{{ featured_image.alt | escape }}" class="lazyload" />
+            {% if featured_image.alt contains 'youtube' or featured_image.alt contains 'vimeo' %}
+              <div class="label-video">{{ 'products.product.video' | t }}</div>
+            {% endif %}
+          </div>
+          {% for image in product.images %}
+            {% if image != featured_image %}
+              <div class="item {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}has-video-content{% endif %}">
+                <img src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}" class="lazyload" />
+                {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+                  <div class="label-video">{{ 'products.product.video' | t }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endcase %}
+  {% else %}
+    {{ 'product-' | append: 1 | placeholder_svg_tag: 'placeholder-svg' }}
+  {% endif %}
+</div>

@@ -1,0 +1,36 @@
+{% include 'gp-page-title' %}
+
+{% assign page_width = settings.collection_page_width_2_columns_left %}
+{% assign container_class = 'container' %}
+{% if page_width == 'fullwidth' %}
+  {% assign container_class = 'container-fluid' %}
+{% endif %}
+
+{% assign view_mode = settings.collection_page_view_mode %}
+{% assign colClassMain = 'col-12 col-md-9' %}
+
+<div class="gp-collection gp-collection-2-columns-left page-width-{{ page_width }}">
+  <div class="{{ container_class }}">
+    <div class="row">
+      {% if collection.description != blank and settings.collection_page_description_position == 'above-products' %}
+        <div class="gp-collection-description col-12">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+
+      <div class="collection-sidebar-filter collection-sidebar-filter-left col-3 {% if collection.products_count == 0 %}hidden{% endif %}">
+        {% section 'gp-collection-filter' %}
+      </div>
+
+      <div class="gp-products view-mode-{{ view_mode }} {{ colClassMain }} {% if view_mode == 'grid-list' %}viewing-grid{% endif %} {% if view_mode == 'list-grid' %}viewing-list{% endif %}">
+        {% section 'gp-collection-2-columns-left' %}
+      </div>
+
+      {% if collection.description != blank and settings.collection_page_description_position == 'below-products' %}
+        <div class="rte collection-description col-12">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

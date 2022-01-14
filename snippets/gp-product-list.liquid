@@ -1,0 +1,115 @@
+<div class="product-card-list product-card-item {{ customClass }}">
+	<div class="product-card-list-inner">
+		{% assign variants_size = product.variants | size %}
+		<div class="image">
+			<a href="{{ product.url }}" class="hover-change-img lazyload-parent">
+				{% if product.images.size > 0 %}
+					<img src="{{ 'blank.png' | asset_img_url: 'master' }}" data-src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.featured_image.alt | escape }}" class="lazyload" />
+					{% if product.images.size > 1 %}
+						<img src="{{ 'blank.png' | asset_img_url: 'master' }}" data-src="{{ product.images[1] | img_url: 'master' }}" alt="{{ product.featured_image.alt | escape }}" class="lazyload" />
+					{% else %}
+						<img src="{{ 'blank.png' | asset_img_url: 'master' }}" data-src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.featured_image.alt | escape }}" class="lazyload" />
+					{% endif %}
+				{% else %}
+					{% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+					{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+				{% endif %}
+			</a>
+			<div class="product-labels">
+				{% if product.compare_at_price > product.price %}
+					{% if settings.collection_page_sale_label_percent %}
+						{% assign percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | ceil %}
+						<span class="sale">-{{ percent }}%</span>
+					{% else %}
+						{% if settings.collection_page_new_label != blank %}
+							<span class="sale">{{ settings.collection_page_new_label }}</span>
+						{% endif %}
+					{% endif %}
+				{% endif %}
+
+				{% if settings.collection_page_new_label != blank %}
+					{% if product.tags contains 'new' %}
+						<span class="new">{{ 'products.product.new' | t }}</span>
+					{% endif %}
+				{% endif %}
+			</div>
+			{% unless settings.collection_page_hide_add_to_wishlist %}
+				<a href="#" title="{{ 'products.product.add_to_wishlist' | t }}" data-wishlist-add="{{ 'products.product.add_to_wishlist' | t }}" data-wishlist-added="{{ 'products.product.added_to_wishlist' | t }}" class="btn-wishlist" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}"></a>
+			{% endunless %}
+		</div>
+		<div class="product-item-details">
+			<div class="title">
+				<a title="{{ product.title | escape }}" href="{{ product.url }}">{{ product.title }}</a>
+			</div>
+			{% unless settings.collection_page_hide_review and hideReview %}
+				{% unless hideReview %}
+					<span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+				{% endunless %}
+			{% endunless %}
+			<div class="bottom-details">
+				<div class="price-wrapper" data-product-price="{{product.id}}">
+					{% include 'product-price', variant: product %}
+				</div>
+
+				{% if product.options.size > 0 %}
+					{% for option in product.options_with_values %}
+						{% assign option_name_downcase = option.name | downcase %}
+						{% assign colorSwatchArr = settings.product_page_option_color_swatch | split: ',' %}
+						{% assign option_index = forloop.index0 %}
+						{% for item in colorSwatchArr %}
+							{% assign stripItem = item | strip | downcase %}
+							{% if stripItem == option_name_downcase %}
+								<div class="color-swatch">
+									{% assign values = '' %}
+									{% for variant in product.variants %}
+										{% assign value = variant.options[option_index] %}
+										{% unless values contains value %}
+											{% assign values = values | join: ',' %}
+											{% assign values = values | append: ',' | append: value %} 
+											{% assign values = values | split: ',' %}
+											{% assign bgColor =  value | split: ' ' | last | handle %}
+											{% if variant.image != blank %}
+												{% assign variantImage = variant.image | img_url: '50x' %}
+											{% endif %}
+											<a href="{{ variant.url | within: collection }}" class="swatch {% if bgColor == 'white' or variant.image != blank %}bordered{% endif %}" {% if variant.image != blank %}data-variant-image="{{ variant.image | img_url: 'master' }}"{% endif %} option-label="{{ value }}" style="background-color:{{ bgColor }}; background-image: url({{ value | handle | append: '.' | append: 'png' | asset_img_url: '50x' }}); {% if variant.image != blank %}background-image: url({{ variant.image | img_url: '50x' }}){% endif %}"></a>
+										{% endunless %}
+									{% endfor %}
+								</div>
+								{% break %}
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+				{% endif %}
+				{% unless hideButtons %}
+					<div class="product-buttons">
+						{% unless settings.collection_page_hide_add_to_cart %}
+							{% if product.available == false %}
+								<a href="{{ product.url }}" class="btn-2 btn-soldout btn-main" title="{{ 'products.product.sold_out' | t }}"><span>{{ 'products.product.sold_out' | t }}</span></a>
+							{% else %}
+								{% assign variants_size = product.variants | size %}
+								{% if variants_size > 1 %}
+									<a href="{{ product.url }}" class="btn-2 btn-select-option btn-main {% unless settings.collection_page_hide_quickview_btn %}js-open-quickview{% endunless %}" title="{{ 'products.product.select_options' | t }}"><span>{{ 'products.product.select_options' | t }}</span></a>
+								{% else %}
+									<a href="{{ product.url }}" class="btn-2 btn-add-to-cart btn-main" data-vid="{{ product.variants.first.id }}" title="{{ 'products.product.add_to_cart' | t }}"><span>{{ 'products.product.add_to_cart' | t }}</span></a>
+								{% endif %}
+							{% endif %}
+						{% endunless %}
+						{% unless settings.collection_page_hide_add_to_compare %}
+							<a href="{{ product.url }}" title="{{ 'products.product.compare' | t }}" data-compare-add="{{ 'products.product.add_to_compare' | t }}" data-compare-added="{{ 'products.product.added_to_compare' | t }}" class="btn-2 btn-compared {% if settings.quickview_enable == false %} width-50 {% endif %}" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" ><span class="ion-ios-shuffle-strong"></span></a>
+						{% endunless %}
+						{% unless settings.collection_page_hide_quickview_btn %}
+							<a href="{{ product.url }}" class="btn-2 btn-quick-view js-open-quickview {% if settings.compare_enable == false %} width-50 {% endif %}" title="{{ 'products.product.quick_view' | t }}"><span class="ion-ios-search"></span></a>
+						{% endunless %}
+					</div>
+				{% endunless %}
+				{% unless hideDescription %}
+					{% if product.description != blank %}
+						<div class="description">
+							{{ product.description | strip_html | truncate: 200 }}
+						</div>
+					{% endif %}
+				{% endunless %}
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,343 @@
+{% include 'gp-section-style' %}
+<div data-section-id="{{ section.id }}" data-section-type="products-section" class="gp-section-wrapper {% unless section.settings.fullwidth %}not-fullwidth-section{% endunless %}">
+  <div class="gp-newsletter gp-section-inner">
+    <div class="row">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% include 'gp-block-heading' %}
+        {% endfor %}
+      {% endif %}
+      <div class="col-12">
+        <div class="gp-newsletter-form layout-{{ section.settings.layout }}" style="{% if section.settings.width != blank %}width:{{ section.settings.width }};{% endif %}">
+          {%- assign formId = 'Contact_' | append: section.id -%}
+          {% form 'customer', id: formId, novalidate: 'novalidate', class: 'contact-form form-single-field' %}
+            {%- if form.posted_successfully? -%}
+              <p class="form-message form-message--success" tabindex="-1" data-form-status>
+                {{ 'general.newsletter_form.confirmation' | t }}
+              </p>
+            {%- endif -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <div class="input-group {% if form.errors %} input-group--error{% endif %}">
+              <input type="email"
+                name="contact[email]"
+                id="{{ formId }}-email"
+                class="input-group__field{% if form.errors %} input--error{% endif %}"
+                value="{% if customer %}{{ customer.email }}{% endif %}"
+                placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                aria-label="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                aria-required="true"
+                autocapitalize="off"
+                {% if form.errors %}
+                  aria-invalid="true"
+                  aria-describedby="{{ formId }}-email-error"
+                  data-form-status
+                {% endif %}
+                required
+                >
+              <span class="input-group__btn">
+                <button type="submit" class="{% if section.settings.layout == 'borderless' %}text-link{% else %}btn{% endif %}" name="commit">
+                  <span>{{ 'general.newsletter_form.submit' | t }}</span>
+                </button>
+              </span>
+            </div>
+            {%- if form.errors contains 'email' -%}
+              <span id="{{ formId }}-email-error" class="input-error-message">
+                {% include 'icon-error' %} {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.
+              </span>
+            {%- endif -%}
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "GPS Newsletter",
+    "class": "index-section",
+    "settings": [
+      {
+				"type": "header",
+				"content": "Specific settings"
+			},
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "default": "borderless",
+        "options": [
+          {
+            "value": "borderless",
+            "label": "Borderless"
+          },
+          {
+            "value": "bordered",
+            "label": "Bordered"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "width",
+        "label": "Form width (optional)",
+        "info": "Optional. Enter value of pixel, percentage. Eg: 400px, 50%."
+      },
+      {
+				"type": "header",
+				"content": "Common settings"
+			},
+      {
+        "type": "checkbox",
+        "id": "fullwidth",
+        "label": "Fullwidth",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "checkbox",
+        "id": "background_cover",
+        "label": "Background cover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "background_parallax",
+        "label": "Background parallax",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "background_repeat",
+        "label": "Background repeat",
+        "default": "no-repeat",
+        "options": [
+          {
+            "value": "no-repeat",
+            "label": "No repeat"
+          },
+          {
+            "value": "repeat",
+            "label": "Repeat"
+          },
+          {
+            "value": "repeat-x",
+            "label": "Repeat-x"
+          },
+          {
+            "value": "repeat-y",
+            "label": "Repeat-y"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_x",
+        "label": "Background position(x)",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "background_pos_y",
+        "label": "Background position(y)",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "header",
+				"content": "Padding & Margin"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_left",
+        "label": "Padding left",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_right",
+        "label": "Padding right",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "default": 90
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading content",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content",
+            "default": "<h2>Newsletter</h2>\n<p>Get the latest news & updates from us</p>"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "heading_color",
+            "label": "Heading color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_color",
+            "label": "Link color",
+            "default": "#000"
+          },
+          {
+            "type": "color",
+            "id": "link_hover_color",
+            "label": "Link hover color",
+            "default": "#c61932"
+          },
+          {
+            "type": "header",
+            "content": "Margin"
+          },
+          {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 30
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "GPS Newsletter",
+      "category": "Promotional",
+      "blocks": [
+        {
+          "type": "heading"
+        }
+      ]
+    }]
+  }
+{% endschema %}
