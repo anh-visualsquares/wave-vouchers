@@ -1,3 +1,5 @@
+<script src="{{ 'gp-product-main-content.js' | asset_url }}" async="async"></script>
+
 <div class="col-12 {% unless defaultTemplate == 'full-screen-multiple-slide' %}col-lg-6{% endunless %} gp-product-col-main">
   <div class="gp-product-col-main-inner">
     <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
@@ -60,11 +62,32 @@
                 {% break %}
               {% endif %}
             {% endfor %}
-            <select class="single-option-selector single-option-selector-{{ section.id }} product-form__input" data-product-id="{{ product.id }}" data-option="{{ option.name | handleize }}" id="SingleOptionSelector-{{ forloop.index0 }}" data-index="option{{ forloop.index }}">
+            <select class="single-option-selector single-option-selector-{{ section.id }} product-form__input js-single-option-selector" data-product-id="{{ product.id }}" data-option="{{ option.name | handleize }}" id="SingleOptionSelector-{{ forloop.index0 }}" data-index="option{{ forloop.index }}">
               {% for value in option.values %}
                 <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
               {% endfor %}
             </select>
+
+            <div class="gift-voucher__recipient js-gift-voucher__recipient">
+              <label for="gift-voucher-recipient-email-{{ forloop.index0 }}">
+                Recipient's email address
+              </label>
+              <input type="text" name="properties[recipient_email]" id="gift-voucher-recipient-email-{{ forloop.index0 }}" class="product-form__input js-voucher-input hidden" placeholder="Recipient's email address" required>
+
+              <label for="gift-voucher-sender-name-{{ forloop.index0 }}">
+                Sender name
+              </label>
+              <input type="text" name="properties[sender_name]" id="gift-voucher-sender-name-{{ forloop.index0 }}" class="product-form__input js-voucher-input hidden" placeholder="Sender name" required>
+
+              <label for="gift-voucher-sender-message-{{ forloop.index0 }}">
+                Message to Recipient
+              </label>
+              <textarea name="properties[sender_message]" id="gift-voucher-sender-message-{{ forloop.index0 }}" class="product-form__input js-voucher-input hidden" placeholder="Message">{{ cart.note }}</textarea>
+
+              <input type="hidden" name="properties[_item_type]" class="js-voucher-input hidden" value="Gift Voucher">
+
+              <button type="button" class="direct-checkout__button js-direct-checkout__button js-voucher-input hidden">Buy it now</button>
+            </div>
           </div>
         {% endfor %}
       {% endunless %}
@@ -85,12 +108,12 @@
         <div id="error-quantity-{{ section.id }}" class="form-message form-message--error product__quantity-error hide" tabindex="-1">
           {% include 'icon-error' %} {{ 'products.product.quantity_minimum_message' | t }}
         </div>
-        <div class="gp-product-qty">
+        <div class="gp-product-qty" data-hidden-send-gift>
           <span class="edit-qty minus"><i class="ion-ios-minus-empty"></i></span>
           <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1" class="product-form__input qty-input" pattern="[0-9]*">
           <span class="edit-qty plus"><i class="ion-ios-plus-empty"></i></span>
         </div>
-        <div class="gp-product-main-button">
+        <div class="gp-product-main-button" data-hidden-send-gift>
           <button type="submit" name="add" id="AddToCart-{{ section.id }}" {% unless current_variant.available %}disabled="disabled"{% endunless %} class="btn product-form__cart-submit btn-add-to-cart-product-page">
             <span id="AddToCartText-{{ section.id }}">
               {% unless current_variant.available %}
@@ -109,7 +132,7 @@
         </div>
         
         {% if settings.product_page_enable_payment_button %}
-          <div class="gp-product-additional-button">
+          <div class="gp-product-additional-button" data-hidden-send-gift>
             {{ form | payment_button }}
           </div>
         {% endif %}

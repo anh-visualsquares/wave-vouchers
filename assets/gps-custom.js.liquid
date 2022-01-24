@@ -349,11 +349,10 @@ $(document).ready(function() {
     var $properties = form.find('[name^="properties"]');
     var properties = {};
     $($properties).each(function(index, el){
+      if ($(el).hasClass('hidden')) return;
       var name = $(el).attr('name').substr(11, $(el).attr('name').length - 12)
       properties[name] = $(el).val();
-      
     });
-    
     var data = {
       quantity: qty,
       id: vId,
